@@ -7,13 +7,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/logp"
 
-	"github.com/elastic/beats/packetbeat/procs"
-	"github.com/elastic/beats/packetbeat/protos"
-	"github.com/elastic/beats/packetbeat/protos/tcp"
-	"github.com/elastic/beats/packetbeat/publish"
+	"github.com/cxfksword/beats/packetbeat/procs"
+	"github.com/cxfksword/beats/packetbeat/protos"
+	"github.com/cxfksword/beats/packetbeat/protos/tcp"
+	"github.com/cxfksword/beats/packetbeat/publish"
 )
 
 var debugf = logp.MakeDebug("http")
@@ -213,7 +213,6 @@ func (http *HTTP) Parse(
 	private protos.ProtocolData,
 ) protos.ProtocolData {
 	defer logp.Recover("ParseHttp exception")
-
 	conn := ensureHTTPConnection(private)
 	conn = http.doParse(conn, pkt, tcptuple, dir)
 	if conn == nil {
@@ -470,6 +469,7 @@ func (http *HTTP) newTransaction(requ, resp *message) common.MapStr {
 		"status":       status,
 		"responsetime": responseTime,
 		"method":       requ.Method,
+		"request_uri":  requ.RequestURI,
 		"path":         path,
 		"params":       params,
 		"query":        fmt.Sprintf("%s %s", requ.Method, path),

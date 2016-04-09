@@ -3,8 +3,8 @@ package mock
 import (
 	"time"
 
-	"github.com/elastic/beats/libbeat/beat"
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/beat"
+	"github.com/cxfksword/beats/libbeat/common"
 )
 
 ///*** Mock Beat Setup ***///

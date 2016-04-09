@@ -1,10 +1,10 @@
 package dns
 
 import (
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/logp"
 
-	"github.com/elastic/beats/packetbeat/procs"
-	"github.com/elastic/beats/packetbeat/protos"
+	"github.com/cxfksword/beats/packetbeat/procs"
+	"github.com/cxfksword/beats/packetbeat/protos"
 )
 
 func (dns *Dns) ParseUdp(pkt *protos.Packet) {

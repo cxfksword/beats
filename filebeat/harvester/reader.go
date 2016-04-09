@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/elastic/beats/filebeat/input"
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/filebeat/input"
+	"github.com/cxfksword/beats/libbeat/logp"
 )
 
 type logFileReader struct {

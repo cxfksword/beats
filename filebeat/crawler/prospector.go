@@ -5,10 +5,10 @@ import (
 	"sync"
 	"time"
 
-	cfg "github.com/elastic/beats/filebeat/config"
-	"github.com/elastic/beats/filebeat/harvester"
-	"github.com/elastic/beats/filebeat/input"
-	"github.com/elastic/beats/libbeat/logp"
+	cfg "github.com/cxfksword/beats/filebeat/config"
+	"github.com/cxfksword/beats/filebeat/harvester"
+	"github.com/cxfksword/beats/filebeat/input"
+	"github.com/cxfksword/beats/libbeat/logp"
 )
 
 type Prospector struct {

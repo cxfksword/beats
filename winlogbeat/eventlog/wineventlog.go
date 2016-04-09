@@ -8,10 +8,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/winlogbeat/sys"
-	win "github.com/elastic/beats/winlogbeat/sys/wineventlog"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/winlogbeat/sys"
+	win "github.com/cxfksword/beats/winlogbeat/sys/wineventlog"
 	"github.com/joeshaw/multierror"
 	"golang.org/x/sys/windows"
 )

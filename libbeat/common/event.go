@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/logp"
 )
 
 func MarshallUnmarshall(v interface{}) (MapStr, error) {

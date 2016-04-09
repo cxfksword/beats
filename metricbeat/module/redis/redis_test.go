@@ -5,7 +5,7 @@ package redis
 import (
 	"testing"
 
-	//"github.com/elastic/beats/libbeat/logp"
+	//"github.com/cxfksword/beats/libbeat/logp"
 	"github.com/stretchr/testify/assert"
 )
 

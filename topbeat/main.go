@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/elastic/beats/libbeat/beat"
-	"github.com/elastic/beats/topbeat/beater"
+	"github.com/cxfksword/beats/libbeat/beat"
+	"github.com/cxfksword/beats/topbeat/beater"
 )
 
 var Name = "topbeat"

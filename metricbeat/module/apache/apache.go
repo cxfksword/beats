@@ -1,7 +1,7 @@
 package apache
 
 import (
-	"github.com/elastic/beats/metricbeat/helper"
+	"github.com/cxfksword/beats/metricbeat/helper"
 )
 
 func init() {

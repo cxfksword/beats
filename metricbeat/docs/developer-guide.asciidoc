@@ -48,12 +48,12 @@ package main
 import (
 	"os"
 
-	"github.com/elastic/beats/metricbeat/beater"
+	"github.com/cxfksword/beats/metricbeat/beater"
 	# Make sure that all your modules and metricsets are linked here
 	_ "github.com/{github-name}/{module-name}/module/{module-name}"
 	_ "github.com/{github-name}/{module-name}/module/{module-name}/{metricset-name}"
 
-	"github.com/elastic/beats/libbeat/beat"
+	"github.com/cxfksword/beats/libbeat/beat"
 )
 
 var Name = "{module-name}"
@@ -70,7 +70,7 @@ glide.yaml
 ----
 package: github.com/ruflin/df2beat
 import:
-- package: github.com/elastic/beats
+- package: github.com/cxfksword/beats
   subpackages:
   - /libbeat/beat
   - metricbeat/beater
@@ -84,7 +84,7 @@ BEATNAME=df2beat
 BEAT_DIR=github.com/ruflin
 SYSTEM_TESTS=false
 TEST_ENVIRONMENT=false
-ES_BEATS=./vendor/github.com/elastic/beats
+ES_BEATS=./vendor/github.com/cxfksword/beats
 GOPACKAGES=$(shell glide novendor)
 PREFIX?=.
 
@@ -109,7 +109,7 @@ The moduler file looks as following. More details can be found under Moduler Det
 package {module-name}
 
 import (
-	"github.com/elastic/beats/metricbeat/helper"
+	"github.com/cxfksword/beats/metricbeat/helper"
 )
 
 func init() {
@@ -135,9 +135,9 @@ The metricseter files looks as following. More details can be found under Metric
 package {metricset-name}
 
 import (
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common"
 
-	"github.com/elastic/beats/metricbeat/helper"
+	"github.com/cxfksword/beats/metricbeat/helper"
 )
 
 func init() {
@@ -177,7 +177,7 @@ Creating a metricbeat module but actually including all existing modules and met
 * main.go: Add link to metricbeat modules and metricsets
 * etc/beat.yml: Add configuration options
 
-Only one line has to be added to `main.go`: `_ "github.com/elastic/beats/metricbeat/include"`. Including this package includes all official modules and metricsets.
+Only one line has to be added to `main.go`: `_ "github.com/cxfksword/beats/metricbeat/include"`. Including this package includes all official modules and metricsets.
 
 main.go
 ----
@@ -186,16 +186,16 @@ package main
 import (
 	"os"
 
-	"github.com/elastic/beats/metricbeat/beater"
+	"github.com/cxfksword/beats/metricbeat/beater"
 
 	// Uncomment the following line to include all official metricbeat module and metricsets
-	_ "github.com/elastic/beats/metricbeat/include"
+	_ "github.com/cxfksword/beats/metricbeat/include"
 
 	// Make sure all your modules and metricsets are linked here
 	_ "github.com/ruflin/df2beat/module/disk/space"
 	_ "github.com/ruflin/df2beat/module/disk"
 
-	"github.com/elastic/beats/libbeat/beat"
+	"github.com/cxfksword/beats/libbeat/beat"
 )
 
 var Name = "df2beat"
@@ -239,7 +239,7 @@ module/{module-name}/{module-name}.go
 package {module-name}
 
 import (
-	"github.com/elastic/beats/metricbeat/helper"
+	"github.com/cxfksword/beats/metricbeat/helper"
 )
 
 func init() {
@@ -276,9 +276,9 @@ module/{module-name}/{module-name}/{metricset-name}/{metricset-name}.go
 package {metricset-name}
 
 import (
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common"
 
-	"github.com/elastic/beats/metricbeat/helper"
+	"github.com/cxfksword/beats/metricbeat/helper"
 )
 
 func init() {

@@ -3,7 +3,7 @@ package mysql
 import (
 	"database/sql"
 
-	"github.com/elastic/beats/metricbeat/helper"
+	"github.com/cxfksword/beats/metricbeat/helper"
 
 	_ "github.com/go-sql-driver/mysql"
 )

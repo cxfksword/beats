@@ -3,11 +3,11 @@ package config
 import (
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/common/droppriv"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/libbeat/publisher"
-	"github.com/elastic/beats/packetbeat/procs"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common/droppriv"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/publisher"
+	"github.com/cxfksword/beats/packetbeat/procs"
 )
 
 type Config struct {

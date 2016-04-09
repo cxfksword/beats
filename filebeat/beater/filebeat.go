@@ -3,12 +3,12 @@ package beater
 import (
 	"fmt"
 
-	"github.com/elastic/beats/libbeat/beat"
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/beat"
+	"github.com/cxfksword/beats/libbeat/logp"
 
-	cfg "github.com/elastic/beats/filebeat/config"
-	"github.com/elastic/beats/filebeat/crawler"
-	"github.com/elastic/beats/filebeat/input"
+	cfg "github.com/cxfksword/beats/filebeat/config"
+	"github.com/cxfksword/beats/filebeat/crawler"
+	"github.com/cxfksword/beats/filebeat/input"
 )
 
 // Filebeat is a beater object. Contains all objects needed to run the beat

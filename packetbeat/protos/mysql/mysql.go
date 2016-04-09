@@ -6,13 +6,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/logp"
 
-	"github.com/elastic/beats/packetbeat/procs"
-	"github.com/elastic/beats/packetbeat/protos"
-	"github.com/elastic/beats/packetbeat/protos/tcp"
-	"github.com/elastic/beats/packetbeat/publish"
+	"github.com/cxfksword/beats/packetbeat/procs"
+	"github.com/cxfksword/beats/packetbeat/protos"
+	"github.com/cxfksword/beats/packetbeat/protos/tcp"
+	"github.com/cxfksword/beats/packetbeat/publish"
 )
 
 // Packet types

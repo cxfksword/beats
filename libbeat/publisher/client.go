@@ -3,9 +3,9 @@ package publisher
 import (
 	"expvar"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/libbeat/outputs"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/outputs"
 )
 
 // Metrics that can retrieved through the expvar web interface.

@@ -6,19 +6,19 @@ import (
 	"os"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/filter"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/libbeat/outputs"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/filter"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/outputs"
 	"github.com/nranchev/go-libGeoIP"
 
 	// load supported output plugins
-	_ "github.com/elastic/beats/libbeat/outputs/console"
-	_ "github.com/elastic/beats/libbeat/outputs/elasticsearch"
-	_ "github.com/elastic/beats/libbeat/outputs/fileout"
-	_ "github.com/elastic/beats/libbeat/outputs/kafka"
-	_ "github.com/elastic/beats/libbeat/outputs/logstash"
-	_ "github.com/elastic/beats/libbeat/outputs/redis"
+	_ "github.com/cxfksword/beats/libbeat/outputs/console"
+	_ "github.com/cxfksword/beats/libbeat/outputs/elasticsearch"
+	_ "github.com/cxfksword/beats/libbeat/outputs/fileout"
+	_ "github.com/cxfksword/beats/libbeat/outputs/kafka"
+	_ "github.com/cxfksword/beats/libbeat/outputs/logstash"
+	_ "github.com/cxfksword/beats/libbeat/outputs/redis"
 )
 
 // command line flags

@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	cfg "github.com/elastic/beats/filebeat/config"
-	"github.com/elastic/beats/libbeat/common"
+	cfg "github.com/cxfksword/beats/filebeat/config"
+	"github.com/cxfksword/beats/libbeat/common"
 	"github.com/stretchr/testify/assert"
 )
 

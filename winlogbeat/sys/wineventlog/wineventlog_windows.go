@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/elastic/beats/winlogbeat/sys"
+	"github.com/cxfksword/beats/winlogbeat/sys"
 	"golang.org/x/sys/windows"
 )
 

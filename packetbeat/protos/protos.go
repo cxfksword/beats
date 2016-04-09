@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/packetbeat/publish"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/packetbeat/publish"
 )
 
 const (
@@ -195,6 +195,9 @@ func (protocols ProtocolsStruct) BpfFilter(with_vlans bool, with_icmp bool) stri
 	filter := strings.Join(expressions, " or ")
 	if with_vlans {
 		filter = fmt.Sprintf("%s or (vlan and (%s))", filter, filter)
+	}
+	if filter == "" {
+		filter = "tcp"
 	}
 	return filter
 }

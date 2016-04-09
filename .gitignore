@@ -1,7 +1,9 @@
 # Directories
 /.vagrant
 /.idea
+/.github
 /build
+/vendor
 
 # Files
 .DS_Store

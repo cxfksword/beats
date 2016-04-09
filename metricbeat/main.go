@@ -3,10 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/elastic/beats/metricbeat/beater"
-	_ "github.com/elastic/beats/metricbeat/include"
+	"github.com/cxfksword/beats/metricbeat/beater"
+	_ "github.com/cxfksword/beats/metricbeat/include"
 
-	"github.com/elastic/beats/libbeat/beat"
+	"github.com/cxfksword/beats/libbeat/beat"
 )
 
 var Name = "metricbeat"

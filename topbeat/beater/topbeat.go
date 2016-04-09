@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/elastic/beats/libbeat/beat"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/libbeat/publisher"
-	"github.com/elastic/beats/topbeat/system"
+	"github.com/cxfksword/beats/libbeat/beat"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/publisher"
+	"github.com/cxfksword/beats/topbeat/system"
 )
 
 type Topbeat struct {

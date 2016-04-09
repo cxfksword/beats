@@ -35,12 +35,12 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/elastic/beats/libbeat/cfgfile"
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/filter"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/libbeat/publisher"
-	svc "github.com/elastic/beats/libbeat/service"
+	"github.com/cxfksword/beats/libbeat/cfgfile"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/filter"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/publisher"
+	svc "github.com/cxfksword/beats/libbeat/service"
 	"github.com/satori/go.uuid"
 )
 
@@ -127,12 +127,19 @@ func newInstance(name string, version string, bt Beater) *instance {
 		version = defaultBeatVersion
 	}
 
+	defaultConfig := common.NewConfig()
+	defaultConfig.SetString("interfaces.device", 0, "any")
+	defaultConfig.SetBool("protocols.http.enabled", 0, true)
+	defaultConfig.SetBool("output.console.pretty", 0, true)
+	defaultConfig.SetBool("logging.to_syslog", 0, false)
+	defaultConfig.SetBool("logging.to_files", 0, false)
 	return &instance{
 		data: &Beat{
-			Name:    name,
-			Version: version,
-			UUID:    uuid.NewV4(),
-			BT:      bt,
+			Name:      name,
+			Version:   version,
+			UUID:      uuid.NewV4(),
+			BT:        bt,
+			RawConfig: defaultConfig,
 		},
 		beater: bt,
 	}
@@ -169,9 +176,9 @@ func (bc *instance) handleFlags() error {
 // in the config. Lastly it invokes the Config method implemented by the beat.
 func (bc *instance) config() error {
 	var err error
-	bc.data.RawConfig, err = cfgfile.Load("")
-	if err != nil {
-		return fmt.Errorf("error loading config file: %v", err)
+	rawConfig, err := cfgfile.Load("")
+	if err == nil {
+		bc.data.RawConfig = rawConfig
 	}
 
 	err = bc.data.RawConfig.Unpack(&bc.data.Config)

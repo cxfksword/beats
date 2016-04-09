@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/elastic/beats/libbeat/beat"
-	"github.com/elastic/beats/winlogbeat/beater"
+	"github.com/cxfksword/beats/libbeat/beat"
+	"github.com/cxfksword/beats/winlogbeat/beater"
 )
 
 // Name of this beat.

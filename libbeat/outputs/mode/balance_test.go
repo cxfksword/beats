@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common"
 
 	_ "net/http/pprof"
 )

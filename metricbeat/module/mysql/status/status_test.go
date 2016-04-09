@@ -7,9 +7,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/metricbeat/helper"
-	"github.com/elastic/beats/metricbeat/module/mysql"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/metricbeat/helper"
+	"github.com/cxfksword/beats/metricbeat/module/mysql"
 )
 
 func TestFetch(t *testing.T) {

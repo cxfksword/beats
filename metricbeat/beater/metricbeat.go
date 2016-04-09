@@ -27,10 +27,10 @@ for each MetricSet to prevent type conflicts. Also all values are stored under t
 package beater
 
 import (
-	"github.com/elastic/beats/libbeat/beat"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/metricbeat/helper"
-	"github.com/elastic/beats/metricbeat/include"
+	"github.com/cxfksword/beats/libbeat/beat"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/metricbeat/helper"
+	"github.com/cxfksword/beats/metricbeat/include"
 )
 
 type Metricbeat struct {

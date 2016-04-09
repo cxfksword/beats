@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common"
 )
 
 // TestMetricSeterState tests if a metricset persists its state during multiple Fetch requests

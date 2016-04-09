@@ -3,7 +3,7 @@ package kafka
 import (
 	"time"
 
-	"github.com/elastic/beats/libbeat/outputs"
+	"github.com/cxfksword/beats/libbeat/outputs"
 )
 
 type kafkaConfig struct {

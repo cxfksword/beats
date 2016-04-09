@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/elastic/beats/filebeat/harvester"
+	"github.com/cxfksword/beats/filebeat/harvester"
 )
 
 type ProspectorStdin struct {

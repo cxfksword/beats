@@ -5,11 +5,11 @@ import (
 	"io"
 	"os"
 
-	"github.com/elastic/beats/filebeat/config"
-	"github.com/elastic/beats/filebeat/harvester/encoding"
-	"github.com/elastic/beats/filebeat/harvester/processor"
-	"github.com/elastic/beats/filebeat/input"
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/filebeat/config"
+	"github.com/cxfksword/beats/filebeat/harvester/encoding"
+	"github.com/cxfksword/beats/filebeat/harvester/processor"
+	"github.com/cxfksword/beats/filebeat/input"
+	"github.com/cxfksword/beats/libbeat/logp"
 	"golang.org/x/text/transform"
 )
 

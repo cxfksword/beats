@@ -3,7 +3,7 @@ package icmp
 import (
 	"time"
 
-	"github.com/elastic/beats/packetbeat/protos"
+	"github.com/cxfksword/beats/packetbeat/protos"
 )
 
 type icmpConfig struct {

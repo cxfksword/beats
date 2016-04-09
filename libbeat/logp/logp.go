@@ -11,6 +11,7 @@ import (
 
 // cmd line flags
 var verbose *bool
+var debugVerbose *bool
 var toStderr *bool
 var debugSelectorsStr *string
 
@@ -25,6 +26,7 @@ type Logging struct {
 func init() {
 	// Adds logging specific flags: -v, -e and -d.
 	verbose = flag.Bool("v", false, "Log at INFO level")
+	debugVerbose = flag.Bool("vv", false, "Log at DEBUG level")
 	toStderr = flag.Bool("e", false, "Log to stderr and disable syslog/file output")
 	debugSelectorsStr = flag.String("d", "", "Enable certain debug selectors")
 }
@@ -43,6 +45,14 @@ func Init(name string, config *Logging) error {
 	if *verbose {
 		if LOG_INFO > logLevel {
 			logLevel = LOG_INFO
+			*toStderr = true
+		}
+	}
+
+	if *debugVerbose {
+		if LOG_DEBUG > logLevel {
+			logLevel = LOG_DEBUG
+			*toStderr = true
 		}
 	}
 
@@ -132,6 +142,7 @@ func SetStderr() {
 }
 
 func getLogLevel(config *Logging) (Priority, error) {
+	fmt.Println(config.Level)
 	if config == nil || config.Level == "" {
 		return LOG_ERR, nil
 	}

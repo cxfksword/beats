@@ -1,4 +1,4 @@
-List of things to keep track on, thoughts on what should be improved. More can also be found in the Github issue under https://github.com/elastic/beats/issues/619
+List of things to keep track on, thoughts on what should be improved. More can also be found in the Github issue under https://github.com/cxfksword/beats/issues/619
 
 
 # Kibana Dashboards
@@ -24,8 +24,8 @@ Filtering can happen through generic filtering but a less complex options with l
 Generic filtering support must be added to the module.
 
 # Topbeat
-Topbeat should be added to metricbeat (see https://github.com/elastic/beats/pull/1081). To make the two better integrated some refactoring on the Topbeat side is needed so MapStr can be consumed directly.
+Topbeat should be added to metricbeat (see https://github.com/cxfksword/beats/pull/1081). To make the two better integrated some refactoring on the Topbeat side is needed so MapStr can be consumed directly.
 
 # More
-* Add service host as default event informartion. See https://github.com/elastic/beats/issues/619#issuecomment-185242407
-* Add version number of service. See https://github.com/elastic/beats/issues/619#issuecomment-185242407
+* Add service host as default event informartion. See https://github.com/cxfksword/beats/issues/619#issuecomment-185242407
+* Add version number of service. See https://github.com/cxfksword/beats/issues/619#issuecomment-185242407

@@ -7,10 +7,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/winlogbeat/sys"
-	win "github.com/elastic/beats/winlogbeat/sys/eventlogging"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/winlogbeat/sys"
+	win "github.com/cxfksword/beats/winlogbeat/sys/eventlogging"
 	"github.com/joeshaw/multierror"
 )
 

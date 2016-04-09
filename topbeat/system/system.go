@@ -1,7 +1,7 @@
 package system
 
 import (
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common"
 	sigar "github.com/elastic/gosigar"
 )
 

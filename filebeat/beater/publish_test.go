@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/elastic/beats/filebeat/input"
-	"github.com/elastic/beats/libbeat/outputs"
-	"github.com/elastic/beats/libbeat/publisher"
+	"github.com/cxfksword/beats/filebeat/input"
+	"github.com/cxfksword/beats/libbeat/outputs"
+	"github.com/cxfksword/beats/libbeat/publisher"
 	"github.com/stretchr/testify/assert"
 )
 

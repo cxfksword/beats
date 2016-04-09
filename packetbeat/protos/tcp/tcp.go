@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/logp"
 
-	"github.com/elastic/beats/packetbeat/flows"
-	"github.com/elastic/beats/packetbeat/protos"
+	"github.com/cxfksword/beats/packetbeat/flows"
+	"github.com/cxfksword/beats/packetbeat/protos"
 
 	"github.com/tsg/gopacket/layers"
 )
@@ -73,8 +73,15 @@ type TcpConnection struct {
 	lastSeq [2]uint32
 
 	// protocols private data
-	data protos.ProtocolData
+	data       protos.ProtocolData
+	unkownData map[protos.Protocol]protos.ProtocolData
 }
+
+// type tcpConnectionData struct {
+// 	Streams   [2]*stream
+// 	requests  []*protos.Packet
+// 	responses []*protos.Packet
+// }
 
 type TcpStream struct {
 	conn *TcpConnection
@@ -90,10 +97,23 @@ func (stream *TcpStream) addPacket(pkt *protos.Packet, tcphdr *layers.TCP) {
 	conn := stream.conn
 	mod := conn.tcp.protocols.GetTcp(conn.protocol)
 	if mod == nil {
-		if isDebug {
-			protocol := conn.protocol
-			debugf("Ignoring protocol for which we have no module loaded: %s",
-				protocol)
+		// TODO:
+		// if isDebug {
+		// 	protocol := conn.protocol
+		// 	debugf("Ignoring protocol for which we have no module loaded: %s",
+		// 		protocol)
+		// }
+		debugf("Send packet to all protocol for which no bind to a port map: %s",
+			conn.protocol)
+		mods := conn.tcp.protocols.GetAllTcp()
+		for proto, mod := range mods {
+			if len(pkt.Payload) > 0 {
+				conn.unkownData[proto] = mod.Parse(pkt, &conn.tcptuple, stream.dir, conn.unkownData[proto])
+			}
+
+			if tcphdr.FIN {
+				conn.unkownData[proto] = mod.ReceivedFin(&conn.tcptuple, stream.dir, conn.unkownData[proto])
+			}
 		}
 		return
 	}
@@ -110,7 +130,14 @@ func (stream *TcpStream) addPacket(pkt *protos.Packet, tcphdr *layers.TCP) {
 func (stream *TcpStream) gapInStream(nbytes int) (drop bool) {
 	conn := stream.conn
 	mod := conn.tcp.protocols.GetTcp(conn.protocol)
-	conn.data, drop = mod.GapInStream(&conn.tcptuple, stream.dir, nbytes, conn.data)
+	if mod == nil {
+		mods := conn.tcp.protocols.GetAllTcp()
+		for proto, mod := range mods {
+			conn.unkownData[proto], drop = mod.GapInStream(&conn.tcptuple, stream.dir, nbytes, conn.unkownData[proto])
+		}
+	} else {
+		conn.data, drop = mod.GapInStream(&conn.tcptuple, stream.dir, nbytes, conn.data)
+	}
 	return drop
 }
 
@@ -181,10 +208,12 @@ func (tcp *Tcp) getStream(pkt *protos.Packet) (stream TcpStream, created bool) {
 	}
 
 	protocol := tcp.decideProtocol(&pkt.Tuple)
-	if protocol == protos.UnknownProtocol {
-		// don't follow
-		return TcpStream{}, false
-	}
+	// TODO:
+	// if protocol == protos.UnknownProtocol {
+	// 	logp.Debug("tcp", "can't decide packet protocal, will ignore.")
+	// 	// don't follow
+	// 	return TcpStream{}, false
+	// }
 
 	var timeout time.Duration
 	mod := tcp.protocols.GetTcp(protocol)
@@ -200,10 +229,12 @@ func (tcp *Tcp) getStream(pkt *protos.Packet) (stream TcpStream, created bool) {
 	}
 
 	conn := &TcpConnection{
-		id:       tcp.getId(),
-		tuple:    &pkt.Tuple,
-		protocol: protocol,
-		tcp:      tcp}
+		id:         tcp.getId(),
+		tuple:      &pkt.Tuple,
+		protocol:   protocol,
+		tcp:        tcp,
+		unkownData: make(map[protos.Protocol]protos.ProtocolData),
+	}
 	conn.tcptuple = common.TcpTupleFromIpPort(conn.tuple, conn.id)
 	tcp.streams.PutWithTimeout(pkt.Tuple.Hashable(), conn, timeout)
 	return TcpStream{conn: conn, dir: TcpDirectionOriginal}, true

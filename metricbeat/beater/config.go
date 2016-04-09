@@ -1,6 +1,6 @@
 package beater
 
-import "github.com/elastic/beats/libbeat/common"
+import "github.com/cxfksword/beats/libbeat/common"
 
 type Config struct {
 	Metricbeat MetricbeatConfig

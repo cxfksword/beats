@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/common/streambuf"
-	"github.com/elastic/beats/libbeat/outputs/transport/transptest"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common/streambuf"
+	"github.com/cxfksword/beats/libbeat/outputs/transport/transptest"
 	"github.com/stretchr/testify/assert"
 )
 

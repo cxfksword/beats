@@ -5,7 +5,7 @@ package publisher
 import (
 	"testing"
 
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common"
 	"github.com/stretchr/testify/assert"
 )
 

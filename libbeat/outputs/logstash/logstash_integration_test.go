@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/outputs"
-	"github.com/elastic/beats/libbeat/outputs/elasticsearch"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/outputs"
+	"github.com/cxfksword/beats/libbeat/outputs/elasticsearch"
 	"github.com/stretchr/testify/assert"
 )
 

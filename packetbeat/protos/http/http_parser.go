@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/common/streambuf"
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common/streambuf"
+	"github.com/cxfksword/beats/libbeat/logp"
 )
 
 // Http Message
@@ -81,6 +81,7 @@ var (
 	nameContentType      = []byte("content-type")
 	nameTransferEncoding = []byte("transfer-encoding")
 	nameConnection       = []byte("connection")
+	nameHost             = []byte("host")
 )
 
 func newParser(config *parserConfig) *parser {
@@ -328,6 +329,8 @@ func (parser *parser) parseHeader(m *message, data []byte) (bool, bool, int) {
 				m.TransferEncoding = common.NetString(headerVal)
 			} else if bytes.Equal(headerName, nameConnection) {
 				m.connection = headerVal
+			} else if bytes.Equal(headerName, nameHost) {
+				m.RequestURI = common.NetString(fmt.Sprintf("http://%s%s", headerVal, m.RequestURI))
 			}
 			if len(config.RealIPHeader) > 0 && bytes.Equal(headerName, []byte(config.RealIPHeader)) {
 				if ips := bytes.SplitN(headerVal, []byte{','}, 2); len(ips) > 0 {

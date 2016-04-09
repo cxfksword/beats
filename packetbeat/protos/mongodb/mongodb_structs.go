@@ -4,7 +4,7 @@ package mongodb
 import (
 	"time"
 
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common"
 )
 
 type mongodbMessage struct {

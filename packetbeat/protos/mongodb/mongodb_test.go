@@ -7,10 +7,10 @@ import (
 	"net"
 	"testing"
 
-	"github.com/elastic/beats/libbeat/common"
-	"github.com/elastic/beats/libbeat/logp"
-	"github.com/elastic/beats/packetbeat/protos"
-	"github.com/elastic/beats/packetbeat/publish"
+	"github.com/cxfksword/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/logp"
+	"github.com/cxfksword/beats/packetbeat/protos"
+	"github.com/cxfksword/beats/packetbeat/publish"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -4,7 +4,7 @@
 Kibana has a large set of visualization types that you can combine to create
 the perfect dashboards for your needs. But this flexibility can be a bit
 overwhelming at the beginning, so we have created a couple of
-https://github.com/elastic/beats-dashboards[Sample Dashboards] to get you
+https://github.com/cxfksword/beats-dashboards[Sample Dashboards] to get you
 started and to demonstrate what is possible based on the Beats data.
 
 NOTE: The Beats dashboards require Kibana 4 or later.
@@ -17,7 +17,7 @@ that you can use. The load command also creates index patterns for each Beat:
    - `topbeat-*`
    - `filebeat-*`
    - `winlogbeat-*`
-   
+
 Use the following commands to run the script:
 
 *deb, rpm, and mac:*
@@ -35,14 +35,14 @@ to specify a different location. For example: `./load.sh -url http://192.168.33.
 
 *win:*
 
-. Download the Beats dashboards from 
-http://download.elastic.co/beats/dashboards/beats-dashboards-{Dashboards-version}.zip. 
+. Download the Beats dashboards from
+http://download.elastic.co/beats/dashboards/beats-dashboards-{Dashboards-version}.zip.
 
 . Extract the contents of the archive.
 
 . Open a PowerShell prompt as an Administrator (right-click the PowerShell icon
 and select *Run As Administrator*). If you are running Windows XP, you may need
-to download and install PowerShell. 
+to download and install PowerShell.
 
 . Run the following commands to load the dashboards:
 +
@@ -74,7 +74,7 @@ When you load the Beats dashboards, you can also specify:
 ----------------------------------------------------------------------
 ./load.sh -url https://xyz.found.io -u user:password <1>
 
-./load.sh -url https://xyz.found.io -u admin:$(cat ~/pass-file) <2> 
+./load.sh -url https://xyz.found.io -u admin:$(cat ~/pass-file) <2>
 
 ./load.sh -url https://user:password@xyz.found.io <3>
 ----------------------------------------------------------------------

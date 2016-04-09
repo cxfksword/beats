@@ -11,7 +11,7 @@ Otherwise it can lead to the issue that multiple calls for one metricset happen 
 package helper
 
 import (
-	"github.com/elastic/beats/libbeat/common"
+	"github.com/cxfksword/beats/libbeat/common"
 )
 
 /*

@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"strconv"
 	"syscall"
 	"time"
 
-	"github.com/elastic/beats/libbeat/logp"
+	"github.com/cxfksword/beats/libbeat/logp"
 
-	"github.com/elastic/beats/packetbeat/config"
+	"github.com/cxfksword/beats/packetbeat/config"
 
 	"github.com/tsg/gopacket"
 	"github.com/tsg/gopacket/layers"
@@ -129,10 +130,14 @@ func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) erro
 	}
 
 	if sniffer.config.Type == "autodetect" || sniffer.config.Type == "" {
-		sniffer.config.Type = "pcap"
+		if runtime.GOOS == "linux" {
+			sniffer.config.Type = "af_packet"
+		} else {
+			sniffer.config.Type = "pcap"
+		}
 	}
 
-	logp.Debug("sniffer", "Sniffer type: %s device: %s", sniffer.config.Type, sniffer.config.Device)
+	logp.Info("Sniffer type: %s device: %s", sniffer.config.Type, sniffer.config.Device)
 
 	switch sniffer.config.Type {
 	case "pcap":
@@ -255,7 +260,7 @@ func (sniffer *SnifferSetup) Init(test_mode bool, factory WorkerFactory) error {
 	if err != nil {
 		return fmt.Errorf("Error creating decoder: %v", err)
 	}
-	logp.Debug("sniffer", "BPF filter: '%s'", sniffer.filter)
+	logp.Info("BPF filter: '%s'", sniffer.filter)
 
 	if sniffer.config.Dumpfile != "" {
 		p, err := pcap.OpenDead(sniffer.Datalink(), 65535)
