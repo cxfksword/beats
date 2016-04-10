@@ -137,7 +137,7 @@ func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) erro
 		}
 	}
 
-	logp.Info("Sniffer type: %s device: %s", sniffer.config.Type, sniffer.config.Device)
+	logp.Info("Sniffer type: %s device: %s BPF filter: '%s'", sniffer.config.Type, sniffer.config.Device, sniffer.filter)
 
 	switch sniffer.config.Type {
 	case "pcap":
@@ -246,9 +246,10 @@ func (sniffer *SnifferSetup) Datalink() layers.LinkType {
 	return layers.LinkTypeEthernet
 }
 
-func (sniffer *SnifferSetup) Init(test_mode bool, factory WorkerFactory) error {
+func (sniffer *SnifferSetup) Init(test_mode bool, factory WorkerFactory, filter string) error {
 	var err error
 
+	sniffer.filter = filter
 	if !test_mode {
 		err = sniffer.setFromConfig(&config.ConfigSingleton.Interfaces)
 		if err != nil {
@@ -260,7 +261,6 @@ func (sniffer *SnifferSetup) Init(test_mode bool, factory WorkerFactory) error {
 	if err != nil {
 		return fmt.Errorf("Error creating decoder: %v", err)
 	}
-	logp.Info("BPF filter: '%s'", sniffer.filter)
 
 	if sniffer.config.Dumpfile != "" {
 		p, err := pcap.OpenDead(sniffer.Datalink(), 65535)
@@ -283,7 +283,6 @@ func (sniffer *SnifferSetup) Run() error {
 	loopCount := 1
 	var lastPktTime *time.Time = nil
 	var ret_error error
-
 	for sniffer.isAlive {
 		if sniffer.config.OneAtATime {
 			fmt.Println("Press enter to read packet")

@@ -45,7 +45,9 @@ import (
 )
 
 var (
-	printVersion = flag.Bool("version", false, "Print the version and exit")
+	printVersion    = flag.Bool("v", false, "Print the version and exit")
+	captureProtocol = flag.String("p", "http", "Capture protocol, support [http, mongodb, mysql, redis, memcache, thrift, amqp]. (all - capture all)")
+	queryConsole    = flag.String("s", "", "Search console output")
 )
 
 var debugf = logp.MakeDebug("beat")
@@ -129,7 +131,6 @@ func newInstance(name string, version string, bt Beater) *instance {
 
 	defaultConfig := common.NewConfig()
 	defaultConfig.SetString("interfaces.device", 0, "any")
-	defaultConfig.SetBool("protocols.http.enabled", 0, true)
 	defaultConfig.SetBool("output.console.pretty", 0, true)
 	defaultConfig.SetBool("logging.to_syslog", 0, false)
 	defaultConfig.SetBool("logging.to_files", 0, false)
@@ -161,6 +162,35 @@ func (bc *instance) handleFlags() error {
 		fmt.Printf("%s version %s (%s), libbeat %s\n", bc.data.Name,
 			bc.data.Version, runtime.GOARCH, defaultBeatVersion)
 		return GracefulExit
+	}
+
+	switch *captureProtocol {
+	case "amqp":
+		bc.data.RawConfig.SetBool("protocols.amqp.enabled", 0, true)
+	case "memcache":
+		bc.data.RawConfig.SetBool("protocols.memcache.enabled", 0, true)
+	case "mongodb":
+		bc.data.RawConfig.SetBool("protocols.mongodb.enabled", 0, true)
+	case "mysql":
+		bc.data.RawConfig.SetBool("protocols.mysql.enabled", 0, true)
+	case "redis":
+		bc.data.RawConfig.SetBool("protocols.redis.enabled", 0, true)
+	case "thrift":
+		bc.data.RawConfig.SetBool("protocols.thrift.enabled", 0, true)
+	case "pgsql":
+		bc.data.RawConfig.SetBool("protocols.pgsql.enabled", 0, true)
+	case "all":
+		bc.data.RawConfig.SetBool("protocols.memcache.enabled", 0, true)
+		bc.data.RawConfig.SetBool("protocols.mysql.enabled", 0, true)
+		bc.data.RawConfig.SetBool("protocols.redis.enabled", 0, true)
+		bc.data.RawConfig.SetBool("protocols.thrift.enabled", 0, true)
+		bc.data.RawConfig.SetBool("protocols.http.enabled", 0, true)
+	default:
+		bc.data.RawConfig.SetBool("protocols.http.enabled", 0, true)
+	}
+
+	if *queryConsole != "" {
+		bc.data.RawConfig.SetString("output.console.query", 0, *queryConsole)
 	}
 
 	// Invoke HandleFlags if FlagsHandler is implemented.

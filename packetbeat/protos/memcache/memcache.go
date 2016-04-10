@@ -4,7 +4,9 @@ package memcache
 
 import (
 	"encoding/json"
+	"fmt"
 	"math"
+	"strings"
 	"time"
 
 	"github.com/cxfksword/beats/libbeat/common"
@@ -391,6 +393,12 @@ func (t *transaction) Event(event common.MapStr) error {
 			mc["protocol_type"] = "text"
 		}
 	}
+
+	keys := []string{}
+	for _, key := range t.request.keys {
+		keys = append(keys, key.String())
+	}
+	event["console"] = fmt.Sprintf("[MC]%s %s %s", t.Ts.Ts.Local().Format("2006-01-02 15:04:05"), t.request.command.code, strings.Join(keys, " "))
 
 	return nil
 }

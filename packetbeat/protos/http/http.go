@@ -492,6 +492,7 @@ func (http *HTTP) newTransaction(requ, resp *message) common.MapStr {
 	if len(requ.RealIP) > 0 {
 		event["real_ip"] = requ.RealIP
 	}
+	event["console"] = fmt.Sprintf("[HTTP]%s %d %s %s", requ.Ts.Local().Format("2006-01-02 15:04:05"), resp.StatusCode, requ.Method, requ.RequestURI)
 
 	return event
 }

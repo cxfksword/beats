@@ -112,6 +112,7 @@ func (protocols ProtocolsStruct) Init(
 			return err
 		}
 
+		logp.Info("enable protocol plugin: %v", proto)
 		protocols.register(proto, inst)
 	}
 
@@ -197,7 +198,7 @@ func (protocols ProtocolsStruct) BpfFilter(with_vlans bool, with_icmp bool) stri
 		filter = fmt.Sprintf("%s or (vlan and (%s))", filter, filter)
 	}
 	if filter == "" {
-		filter = "tcp"
+		filter = "tcp and not port 22"
 	}
 	return filter
 }

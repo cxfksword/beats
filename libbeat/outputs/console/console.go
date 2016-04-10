@@ -3,6 +3,7 @@ package console
 import (
 	"encoding/json"
 	"os"
+	"strings"
 
 	"github.com/cxfksword/beats/libbeat/common"
 	"github.com/cxfksword/beats/libbeat/logp"
@@ -27,7 +28,7 @@ func New(config *common.Config, _ int) (outputs.Outputer, error) {
 }
 
 func newConsole(pretty bool) *console {
-	return &console{config{pretty}}
+	return &console{config{pretty, ""}}
 }
 
 func writeBuffer(buf []byte) error {
@@ -53,21 +54,31 @@ func (c *console) PublishEvent(
 	opts outputs.Options,
 	event common.MapStr,
 ) error {
-	var jsonEvent []byte
+	var msg []byte
 	var err error
 
-	if c.config.Pretty {
-		jsonEvent, err = json.MarshalIndent(event, "", "  ")
+	if consoleMsg, exist := event["console"]; exist {
+		msg = []byte(consoleMsg.(string))
 	} else {
-		jsonEvent, err = json.Marshal(event)
+		if c.config.Pretty {
+			msg, err = json.MarshalIndent(event, "", "  ")
+		} else {
+			msg, err = json.Marshal(event)
+		}
 	}
 	if err != nil {
 		logp.Err("Fail to convert the event to JSON: %s", err)
 		outputs.SignalCompleted(s)
+		return nil
+	}
+
+	if c.config.Query != "" && !strings.Contains(string(msg), c.config.Query) {
+		logp.Debug("console", "[%s] not match query output: %s, will ignore.", string(msg), c.config.Query)
+		outputs.SignalCompleted(s)
 		return err
 	}
 
-	if err = writeBuffer(jsonEvent); err != nil {
+	if err = writeBuffer(msg); err != nil {
 		goto fail
 	}
 	if err = writeBuffer([]byte{'\n'}); err != nil {

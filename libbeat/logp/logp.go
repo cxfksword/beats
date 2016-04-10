@@ -25,8 +25,8 @@ type Logging struct {
 
 func init() {
 	// Adds logging specific flags: -v, -e and -d.
-	verbose = flag.Bool("v", false, "Log at INFO level")
-	debugVerbose = flag.Bool("vv", false, "Log at DEBUG level")
+	verbose = flag.Bool("vv", false, "Log at INFO level")
+	debugVerbose = flag.Bool("vvv", false, "Log at DEBUG level")
 	toStderr = flag.Bool("e", false, "Log to stderr and disable syslog/file output")
 	debugSelectorsStr = flag.String("d", "", "Enable certain debug selectors")
 }

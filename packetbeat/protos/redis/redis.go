@@ -2,6 +2,7 @@ package redis
 
 import (
 	"bytes"
+	"fmt"
 	"time"
 
 	"github.com/cxfksword/beats/libbeat/common"
@@ -107,7 +108,6 @@ func (redis *Redis) Parse(
 	private protos.ProtocolData,
 ) protos.ProtocolData {
 	defer logp.Recover("ParseRedis exception")
-
 	conn := ensureRedisConnection(private)
 	conn = redis.doParse(conn, pkt, tcptuple, dir)
 	if conn == nil {
@@ -175,7 +175,6 @@ func (redis *Redis) doParse(
 			}
 			return conn
 		}
-
 		if !complete {
 			// wait for more data
 			break
@@ -305,6 +304,7 @@ func (redis *Redis) newTransaction(requ, resp *redisMessage) common.MapStr {
 	if redis.SendResponse {
 		event["response"] = resp.Message
 	}
+	event["console"] = fmt.Sprintf("[REDIS]%s %s", requ.Ts.Local().Format("2006-01-02 15:04:05"), requ.Message)
 
 	return event
 }

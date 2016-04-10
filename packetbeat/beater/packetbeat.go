@@ -181,7 +181,7 @@ func (pb *Packetbeat) setupSniffer() error {
 	}
 
 	pb.Sniff = &sniffer.SnifferSetup{}
-	return pb.Sniff.Init(false, pb.makeWorkerFactory(filter))
+	return pb.Sniff.Init(false, pb.makeWorkerFactory(filter), filter)
 }
 
 func (pb *Packetbeat) makeWorkerFactory(filter string) sniffer.WorkerFactory {

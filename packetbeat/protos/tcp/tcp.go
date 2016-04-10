@@ -147,6 +147,13 @@ func (tcp *Tcp) Process(id *flows.FlowID, tcphdr *layers.TCP, pkt *protos.Packet
 	defer logp.Recover("Process tcp exception")
 
 	debugf("tcp flow id: %p", id)
+	// fmt.Println(common.ToJSON(tcphdr))
+
+	// filter Keepalive hearbeat packets with 1-byte segment on Windows
+	if tcphdr.ACK && len(pkt.Payload) == 1 {
+		logp.Debug("tcp", "Ignore heartbeat packets.")
+		return
+	}
 
 	stream, created := tcp.getStream(pkt)
 	if stream.conn == nil {
@@ -206,6 +213,11 @@ func (tcp *Tcp) getStream(pkt *protos.Packet) (stream TcpStream, created bool) {
 	if conn := tcp.findStream(pkt.Tuple.RevHashable()); conn != nil {
 		return TcpStream{conn: conn, dir: TcpDirectionReverse}, false
 	}
+
+	// if pkt.Tuple.Src_port == 22 || pkt.Tuple.Dst_port == 22 {
+	// 	logp.Debug("tcp", "ssh protocal packet in port 22, will ignore.")
+	// 	return TcpStream{}, false
+	// }
 
 	protocol := tcp.decideProtocol(&pkt.Tuple)
 	// TODO:
