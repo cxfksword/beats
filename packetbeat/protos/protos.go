@@ -198,7 +198,7 @@ func (protocols ProtocolsStruct) BpfFilter(with_vlans bool, with_icmp bool) stri
 		filter = fmt.Sprintf("%s or (vlan and (%s))", filter, filter)
 	}
 	if filter == "" {
-		filter = "tcp and not port 22"
+		filter = "tcp and not port 22 and not port 3333"
 	}
 	return filter
 }

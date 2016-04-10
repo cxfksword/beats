@@ -19,6 +19,7 @@ import (
 	_ "github.com/cxfksword/beats/libbeat/outputs/kafka"
 	_ "github.com/cxfksword/beats/libbeat/outputs/logstash"
 	_ "github.com/cxfksword/beats/libbeat/outputs/redis"
+	_ "github.com/cxfksword/beats/libbeat/outputs/web"
 )
 
 // command line flags

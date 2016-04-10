@@ -45,9 +45,10 @@ import (
 )
 
 var (
-	printVersion    = flag.Bool("v", false, "Print the version and exit")
-	captureProtocol = flag.String("p", "http", "Capture protocol, support [http, mongodb, mysql, redis, memcache, thrift, amqp]. (all - capture all)")
-	queryConsole    = flag.String("s", "", "Search console output")
+	printVersion        = flag.Bool("v", false, "Print the version and exit")
+	captureProtocol     = flag.String("p", "http", "Capture protocol, support [http, mongodb, mysql, redis, memcache, thrift, amqp]. (all - capture all)")
+	queryConsole        = flag.String("s", "", "Search console output")
+	webOutputListenPort = flag.Int("webport", 3333, "Web output listen port")
 )
 
 var debugf = logp.MakeDebug("beat")
@@ -132,6 +133,7 @@ func newInstance(name string, version string, bt Beater) *instance {
 	defaultConfig := common.NewConfig()
 	defaultConfig.SetString("interfaces.device", 0, "any")
 	defaultConfig.SetBool("output.console.pretty", 0, true)
+	defaultConfig.SetInt("output.web.port", 0, 3333)
 	defaultConfig.SetBool("logging.to_syslog", 0, false)
 	defaultConfig.SetBool("logging.to_files", 0, false)
 	return &instance{
@@ -191,6 +193,10 @@ func (bc *instance) handleFlags() error {
 
 	if *queryConsole != "" {
 		bc.data.RawConfig.SetString("output.console.query", 0, *queryConsole)
+	}
+
+	if *webOutputListenPort > 0 {
+		bc.data.RawConfig.SetInt("output.web.port", 0, int64(*webOutputListenPort))
 	}
 
 	// Invoke HandleFlags if FlagsHandler is implemented.
