@@ -17,6 +17,7 @@ var (
 	defaultConfig = amqpConfig{
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			Ports:              []int{5672},
 		},
 		ParseHeaders:              true,
 		ParseArguments:            true,

@@ -15,6 +15,7 @@ var (
 	defaultConfig = mysqlConfig{
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			Ports:              []int{3306},
 		},
 		MaxRowLength: 1024,
 		MaxRows:      10,

@@ -15,6 +15,7 @@ var (
 	defaultConfig = mongodbConfig{
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			Ports:              []int{27017},
 		},
 		MaxDocLength: 5000,
 		MaxDocs:      10,

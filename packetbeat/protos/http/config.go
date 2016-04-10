@@ -20,6 +20,7 @@ var (
 	defaultConfig = httpConfig{
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			Ports:              []int{80},
 		},
 	}
 )

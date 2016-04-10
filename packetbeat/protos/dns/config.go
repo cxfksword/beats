@@ -15,6 +15,7 @@ var (
 	defaultConfig = dnsConfig{
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			Ports:              []int{53},
 		},
 	}
 )

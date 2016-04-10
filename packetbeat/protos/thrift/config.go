@@ -21,6 +21,7 @@ var (
 	defaultConfig = thriftConfig{
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			Ports:              []int{9090},
 		},
 		StringMaxSize:          200,
 		CollectionMaxSize:      15,

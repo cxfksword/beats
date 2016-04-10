@@ -13,6 +13,7 @@ var (
 	defaultConfig = redisConfig{
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			Ports:              []int{6379},
 		},
 	}
 )

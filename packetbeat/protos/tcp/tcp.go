@@ -2,7 +2,6 @@ package tcp
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/cxfksword/beats/libbeat/common"
 	"github.com/cxfksword/beats/libbeat/logp"
@@ -227,7 +226,7 @@ func (tcp *Tcp) getStream(pkt *protos.Packet) (stream TcpStream, created bool) {
 	// 	return TcpStream{}, false
 	// }
 
-	var timeout time.Duration
+	timeout := protos.DefaultTransactionExpiration
 	mod := tcp.protocols.GetTcp(protocol)
 	if mod != nil {
 		timeout = mod.ConnectionTimeout()

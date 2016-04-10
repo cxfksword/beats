@@ -15,6 +15,7 @@ var (
 	defaultConfig = pgsqlConfig{
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			Ports:              []int{5432},
 		},
 		MaxRowLength: 1024,
 		MaxRows:      10,

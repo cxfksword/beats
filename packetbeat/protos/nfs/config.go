@@ -13,6 +13,7 @@ var (
 	defaultConfig = rpcConfig{
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			Ports:              []int{2049},
 		},
 	}
 )

@@ -18,7 +18,7 @@ type memcacheConfig struct {
 var (
 	defaultConfig = memcacheConfig{
 		ProtocolCommon: config.ProtocolCommon{
-			// Ports:              []int{11211},
+			Ports:              []int{11211},
 			TransactionTimeout: protos.DefaultTransactionExpiration,
 		},
 		UdpTransactionTimeout: protos.DefaultTransactionExpiration,

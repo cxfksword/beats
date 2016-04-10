@@ -161,33 +161,34 @@ func (protocols ProtocolsStruct) BpfFilter(with_vlans bool, with_icmp bool) stri
 	}
 	sort.Ints(protos)
 
+	// port only use to decide protocol, no longer use for bpf filter
 	var expressions []string
-	for _, key := range protos {
-		proto := Protocol(key)
-		plugin := protocols.all[proto]
-		for _, port := range plugin.GetPorts() {
-			hasTCP := false
-			hasUDP := false
+	// for _, key := range protos {
+	// 	proto := Protocol(key)
+	// 	plugin := protocols.all[proto]
+	// 	for _, port := range plugin.GetPorts() {
+	// 		hasTCP := false
+	// 		hasUDP := false
 
-			if _, present := protocols.tcp[proto]; present {
-				hasTCP = true
-			}
-			if _, present := protocols.udp[proto]; present {
-				hasUDP = true
-			}
+	// 		if _, present := protocols.tcp[proto]; present {
+	// 			hasTCP = true
+	// 		}
+	// 		if _, present := protocols.udp[proto]; present {
+	// 			hasUDP = true
+	// 		}
 
-			var expr string
-			if hasTCP && !hasUDP {
-				expr = "tcp port %d"
-			} else if !hasTCP && hasUDP {
-				expr = "udp port %d"
-			} else {
-				expr = "port %d"
-			}
+	// 		var expr string
+	// 		if hasTCP && !hasUDP {
+	// 			expr = "tcp port %d"
+	// 		} else if !hasTCP && hasUDP {
+	// 			expr = "udp port %d"
+	// 		} else {
+	// 			expr = "port %d"
+	// 		}
 
-			expressions = append(expressions, fmt.Sprintf(expr, port))
-		}
-	}
+	// 		expressions = append(expressions, fmt.Sprintf(expr, port))
+	// 	}
+	// }
 
 	if with_icmp {
 		expressions = append(expressions, "icmp", "icmp6")
@@ -196,9 +197,6 @@ func (protocols ProtocolsStruct) BpfFilter(with_vlans bool, with_icmp bool) stri
 	filter := strings.Join(expressions, " or ")
 	if with_vlans {
 		filter = fmt.Sprintf("%s or (vlan and (%s))", filter, filter)
-	}
-	if filter == "" {
-		filter = "tcp and not port 22 and not port 3333"
 	}
 	return filter
 }
