@@ -14,6 +14,8 @@ var (
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
 			Ports:              []int{6379},
+			SendRequest:        true,
+			SendResponse:       true,
 		},
 	}
 )

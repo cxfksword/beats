@@ -12,6 +12,7 @@ import (
 	"github.com/cxfksword/beats/libbeat/common"
 	"github.com/cxfksword/beats/libbeat/logp"
 
+	"github.com/cxfksword/beats/packetbeat/color"
 	"github.com/cxfksword/beats/packetbeat/protos"
 	"github.com/cxfksword/beats/packetbeat/protos/applayer"
 	"github.com/cxfksword/beats/packetbeat/publish"
@@ -394,11 +395,26 @@ func (t *transaction) Event(event common.MapStr) error {
 		}
 	}
 
+	// organize console output
 	keys := []string{}
 	for _, key := range t.request.keys {
 		keys = append(keys, key.String())
 	}
-	event["console"] = fmt.Sprintf("[MC]%s %s %s", t.Ts.Ts.Local().Format("2006-01-02 15:04:05"), t.request.command.code, strings.Join(keys, " "))
+	var result string
+	if mc["request"].(common.MapStr)["type"] == "Store" {
+		result = color.Color(fmt.Sprintf("→ %dB", mc["request"].(common.MapStr)["bytes"]), color.Gray)
+	}
+	event["method"] = t.request.command.code
+	event["query"] = strings.Join(keys, " ")
+	event["console"] = fmt.Sprintf("%8s %s %-17s %-5s %-5s %s %s %s",
+		"[MC]",
+		t.Ts.Ts.Format("15:04:05"),
+		fmt.Sprintf("%s:%d", t.Dst.Ip, t.Dst.Port),
+		fmt.Sprintf("%dms", t.ResponseTime),
+		fmt.Sprintf("%dKB", t.response.Size/1000),
+		t.request.command.code,
+		strings.Join(keys, " "),
+		result)
 
 	return nil
 }

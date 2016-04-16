@@ -48,7 +48,7 @@ var (
 	printVersion        = flag.Bool("v", false, "Print the version and exit")
 	captureProtocol     = flag.String("p", "http", "Capture protocol, support [http, mongodb, mysql, redis, memcache, thrift, amqp]. (all - capture all)")
 	queryConsole        = flag.String("s", "", "Search console output")
-	webOutputListenPort = flag.Int("webport", 3333, "Web output listen port")
+	webOutputListenPort = flag.Int("webport", 8333, "Web output listen port")
 )
 
 var debugf = logp.MakeDebug("beat")

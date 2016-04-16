@@ -10,6 +10,7 @@ package web
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 
 	"github.com/cxfksword/beats/libbeat/logp"
@@ -82,7 +83,7 @@ func (s *WebServer) Start() {
 	http.HandleFunc("/", s.handleStaticFile)
 
 	logp.Info("web output listen on%s", s.addr)
-	fmt.Printf("Web output listen on%s\n", s.addr)
+	fmt.Printf("Please goto http://%s%s for details.\n", GetHostIp(), s.addr)
 	err := http.ListenAndServe(s.addr, nil)
 	if err != nil {
 		logp.Err("can't start web output server: %v", err)
@@ -95,4 +96,21 @@ func NewWebServer(addr string) *WebServer {
 	s.addr = addr
 	s.connectedClient = make(map[*websocket.Conn]*WebClient)
 	return s
+}
+
+func GetHostIp() string {
+	ip := "127.0.0.1"
+
+	addrs, _ := net.InterfaceAddrs()
+	for _, a := range addrs {
+		ipnet := net.ParseIP(a.String())
+		if ipnet != nil && !ipnet.IsLoopback() && !ipnet.IsUnspecified() {
+			if ipnet.To4() != nil {
+				ip = ipnet.String()
+				break
+			}
+		}
+	}
+
+	return ip
 }

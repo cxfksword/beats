@@ -10,6 +10,7 @@ import (
 	"github.com/cxfksword/beats/libbeat/common"
 	"github.com/cxfksword/beats/libbeat/logp"
 
+	"github.com/cxfksword/beats/packetbeat/color"
 	"github.com/cxfksword/beats/packetbeat/procs"
 	"github.com/cxfksword/beats/packetbeat/protos"
 	"github.com/cxfksword/beats/packetbeat/protos/tcp"
@@ -492,7 +493,19 @@ func (http *HTTP) newTransaction(requ, resp *message) common.MapStr {
 	if len(requ.RealIP) > 0 {
 		event["real_ip"] = requ.RealIP
 	}
-	event["console"] = fmt.Sprintf("[HTTP]%s %d %s %s", requ.Ts.Local().Format("2006-01-02 15:04:05"), resp.StatusCode, requ.Method, requ.RequestURI)
+
+	contentIdx := strings.Index(string(resp.Raw), "<html")
+	event["raw"] = strings.TrimSpace(string(resp.Raw[contentIdx:]))
+	event["console"] = fmt.Sprintf("%8s %s %-17s %-5s %-5s %s %4s %s",
+		"[HTTP]",
+		requ.Ts.Format("15:04:05"),
+		fmt.Sprintf("%s:%d", dst.Ip, dst.Port),
+		fmt.Sprintf("%dms", responseTime),
+		fmt.Sprintf("%dKB", resp.Size/1000),
+		color.StatusCodeColor(int(resp.StatusCode)),
+		requ.Method,
+		requ.RequestURI)
+	//color.ContentColor(string(resp.chunkedBody)
 
 	return event
 }

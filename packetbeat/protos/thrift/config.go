@@ -22,6 +22,8 @@ var (
 		ProtocolCommon: config.ProtocolCommon{
 			TransactionTimeout: protos.DefaultTransactionExpiration,
 			Ports:              []int{9090},
+			SendRequest:        true,
+			SendResponse:       true,
 		},
 		StringMaxSize:          200,
 		CollectionMaxSize:      15,

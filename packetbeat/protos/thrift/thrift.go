@@ -1135,6 +1135,15 @@ func (thrift *Thrift) publishTransactions() {
 		event["src"] = &t.Src
 		event["dst"] = &t.Dst
 
+		// organize console output
+		event["console"] = fmt.Sprintf("%8s %s %-17s %-5s %-5s %s",
+			"[Thrift]",
+			t.ts.Format("15:04:05"),
+			fmt.Sprintf("%s:%d", t.Dst.Ip, t.Dst.Port),
+			fmt.Sprintf("%dms", t.ResponseTime),
+			fmt.Sprintf("%dKB", t.BytesOut/1000),
+			fmt.Sprintf("%s%s", t.Request.Method, t.Request.Params))
+
 		if thrift.results != nil {
 			thrift.results.PublishTransaction(event)
 		}

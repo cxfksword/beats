@@ -19,6 +19,8 @@ table {
 .body {
     width: 100%;
     word-break: break-all;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 .break-all {
     word-break: break-all;
@@ -30,7 +32,9 @@ table {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
+table th {
+    text-align: left;
+}
 table tr:nth-child(even) {
     background-color: #eee;
 }

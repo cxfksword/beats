@@ -6,6 +6,6 @@ type config struct {
 
 var (
 	defaultConfig = config{
-		Port: 3333,
+		Port: 8333,
 	}
 )

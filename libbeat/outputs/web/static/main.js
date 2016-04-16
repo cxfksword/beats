@@ -1,62 +1,21 @@
 angular.module('ngFilter', []).filter('reqFilter', function() {
-    return function(items, filterType, pattern) {
+    return function(items, protosType, pattern) {
         var result = [];
-        if (!filterType || !pattern)
+        if (!protosType && !pattern)
             return items;
 
         function getMatchFunction() {
-            if (filterType == "Uri") {
-                return function(item) {
-                    return item.Uri.indexOf(pattern) != -1;
-                };
-            } else if (filterType == "RequestHeader") {
-                return function(item) {
-                    for (var i = 0; i < item.Headers.length; ++i) {
-                        var h = item.Headers[i]
-                        if (h.Name.indexOf(pattern) != -1)
-                            return true;
-                        if (h.Value.indexOf(pattern) != -1)
-                            return true;
-                    }
-                };
-            } else if (filterType == "ResponseHeader") {
-                return function(item) {
-                    if (!item.Response)
-                        return false;
-                    for (var i = 0; i < item.Response.Headers.length; ++i) {
-                        var h = item.Response.Headers[i]
-                        if (h.Name.indexOf(pattern) != -1)
-                            return true;
-                        if (h.Value.indexOf(pattern) != -1)
-                            return true;
-                    }
-                };
-            } else if (filterType == "Cookie") {
-                return function(item) {
-                    for (var i = 0; i < item.Headers.length; ++i) {
-                        var h = item.Headers[i];
-                        if (h.Name == "Cookie") {
-                            return h.Value.indexOf(pattern) != -1;
-                        }
-                    }
-                };
-            } else if (filterType == "Code") {
-                return function(item) {
-                    if (!item.Response)
-                        return false;
-                    return item.Response.Code == parseInt(pattern)
-                };
-            } else if (filterType == "RequestBody") {
-                return function(item) {
-                    return item.Body.indexOf(pattern) != -1;
-                };
-            } else if (filterType == "ResponseBody") {
-                return function(item) {
-                    if (!item.Response)
-                        return false;
-                    return item.Response.Body.indexOf(pattern) != -1;
-                };
-            }
+            return function(item) {
+                if (protosType && item.type != protosType) {
+                    return false;
+                }
+
+                if( pattern && item.query.toLowerCase().indexOf(pattern.toLowerCase()) < 0) {
+                    return false
+                }
+
+                return true;
+            };
         };
         var matchFunc = getMatchFunction();
         for (var i = 0; i < items.length; i++) {
@@ -75,33 +34,36 @@ app.factory('netdata', function($websocket) {
     var reqs = [];
     dataStream.onMessage(function(message) {
         var e = JSON.parse(message.data);
-        if (!(e.StreamSeq in streams)) {
-            streams[e.StreamSeq] = [];
+        if (!e) {
+            return;
         }
-        var stream = streams[e.StreamSeq];
-        if (e.Type == "HttpRequest") {
-            stream.push(e);
-            reqs.push(e);
-            //add Host
-            for (var i = 0; i < e.Headers.length; ++i) {
-                var h = e.Headers[i];
-                if (h.Name == 'Host') {
-                    e.Host = h.Value;
-                    break;
-                }
+        e.timestamp = e['@timestamp'];
+        e.request = $.trim(e.request);
+        e.response = $.trim(e.response);
+        if (e.type == 'http') {
+            e.status = e.http.code;
+            e.query = e.request_uri;
+
+            var headers = [];
+            var headerArr = e.request.split("\n");
+            for (var i=0; i < headerArr.length; i++) {
+                var arr = headerArr[i].split(':');
+                headers.push({'name': arr[0], 'value': arr[1]});
             }
-        } else if (e.Type == "HttpResponse") {
-            if (stream.length > 0) {
-                var req = stream[stream.length-1]
-                if (req.Response) {
-                    console.error("duplicate response in stream #" + e.StreamSeq + " uri:" + req.Uri
-                        + "\nold:", req.Response, "\nnew:", e)
-                } else {
-                    req.Response = e;
-                    req.Duration = e.EndTimestamp - req.Timestamp
-                }
+            e.http.request_headers = headers;
+
+            headers = [];
+            headerArr = e.response.split("\n");
+            for (var i=0; i < headerArr.length; i++) {
+                var arr = headerArr[i].split(':');
+                headers.push({'name': arr[0], 'value': arr[1]});
             }
+            e.http.response_headers = headers;
+
+            e.response = e.raw;
+
         }
+        reqs.push(e);
     });
     var data = {
         reqs: reqs,

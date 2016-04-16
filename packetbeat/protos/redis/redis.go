@@ -3,11 +3,13 @@ package redis
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/cxfksword/beats/libbeat/common"
 	"github.com/cxfksword/beats/libbeat/logp"
 
+	"github.com/cxfksword/beats/packetbeat/color"
 	"github.com/cxfksword/beats/packetbeat/procs"
 	"github.com/cxfksword/beats/packetbeat/protos"
 	"github.com/cxfksword/beats/packetbeat/protos/applayer"
@@ -304,7 +306,25 @@ func (redis *Redis) newTransaction(requ, resp *redisMessage) common.MapStr {
 	if redis.SendResponse {
 		event["response"] = resp.Message
 	}
-	event["console"] = fmt.Sprintf("[REDIS]%s %s", requ.Ts.Local().Format("2006-01-02 15:04:05"), requ.Message)
+
+	// organize console output
+	var result string
+	cmd := string(bytes.ToUpper(requ.Method))
+	if strings.Contains(cmd, "SET") || strings.Contains(cmd, "ADD") || strings.Contains(cmd, "PUSH") {
+		result = color.Color(fmt.Sprintf("→ %dB", requ.Size), color.Gray)
+	}
+	message := string(requ.Message)
+	if len(message) > 100 {
+		message = message[:100] + "..."
+	}
+	event["console"] = fmt.Sprintf("%8s %s %-17s %-5s %-5s %s %s",
+		"[REDIS]",
+		requ.Ts.Format("15:04:05"),
+		fmt.Sprintf("%s:%d", requ.TcpTuple.Dst_ip.String(), requ.TcpTuple.Dst_port),
+		fmt.Sprintf("%dms", responseTime),
+		fmt.Sprintf("%dKB", resp.Size/1000),
+		message,
+		result)
 
 	return event
 }

@@ -10,82 +10,71 @@
     </head>
     <body>
         <h2>packetbeat</h2>
+        Type:
+        <select ng-model="protosType">
+            <option value="">all</option>
+            <option value="http">http</option>
+            <option value="memcache">memcache</option>
+            <option value="redis">redis</option>
+            <option value="mysql">mysql</option>
+            <option value="thrift">thrift</option>
+        </select>
         Filter:
-        <select ng-model="filterType">
-            <option value="Uri">Uri</option>
-            <option value="Cookie">Cookie</option>
-            <option value="Code">Code</option>
-            <option value="RequestHeader">Request Header</option>
-            <option value="ResponseHeader">Response Header</option>
-            <option value="RequestBody">Request Body</option>
-            <option value="ResponseBody">Response Body</option>
-        </select>
         <input ng-model="pattern">
-        Sorted by:
-        <select ng-model="order">
-            <option value="Timestamp">Time</option>
-            <option value="Host">Host</option>
-            <option value="Duration">Duration</option>
-            <option value="StreamSeq">Stream</option>
-            <option value="Uri">Uri</option>
-        </select>
-        Reverse<input type="checkbox" ng-model="reverse"/>
         <div class="requests">
             <table width="100%">
                 <thead>
                     <tr>
-                    <th width="5%">Time</th>
-                    <th width="7%">Duration</th>
-                    <th width="5%">Stream</th>
-                    <th width="15%">Domain</th>
+                    <th width="5%">Type</th>
+                    <th width="15%">Time</th>
+                    <th width="10%">ServerIp</th>
+                    <th width="5%">Status</th>
                     <th width="5%">Method</th>
-                    <th width="58%">Uri</th>
-                    <th width="5%">Code</th>
+                    <th width="50%">Query</th>
+                    <th width="5%">Size</th>
+                    <th width="5%">Duration</th>
                     </tr>
                 </thead>
-                <tr ng-repeat="req in reqs | reqFilter:filterType:pattern | orderBy:order:reverse" ng-click="showDetail($event, req)">
-                    <td>{{ req.Timestamp - reqs[0].Timestamp | number:3 }}</td>
-                    <td>{{ req.Duration | number:3}}</td>
-                    <td>{{ req.StreamSeq }}</td>
-                    <td>{{ req.Host }}</td>
-                    <td>{{ req.Method }}</td>
-                    <td><a href="http://{{getHost(req)}}{{req.Uri}}" target="_blank">{{ req.Uri }}</a></td>
-                    <td>{{ req.Response.Code }}</td>
+                <tr ng-repeat="req in reqs | reqFilter:protosType:pattern" ng-click="showDetail($event, req)">
+                    <td>{{ req.type }}</td>
+                    <td>{{ req.timestamp }}</td>
+                    <td>{{ req.ip }}:{{ req.port }}</td>
+                    <td>{{ req.status }}</td>
+                    <td>{{ req.method }}</td>
+                    <td>{{ req.query }}</td>
+                    <td>{{ req.bytes_out/1000 }}KB</td>
+                    <td>{{ req.responsetime }}ms</td>
                 </tr>
             </table>
         </div>
         <div id="detail" style="width:100%">
             <div id="request-detail" class="http-detail" style="float: left;">
                 <div id="request-first-line" class="first-line">
-                    {{ selectedReq.Method }} {{ selectedReq.Uri }} {{ selectedReq.Version }}
+                    request
                 </div>
                 <div id="request-head" class="head">
                     <table width="100%">
-                        <tr ng-repeat="h in selectedReq.Headers">
-                            <td width="30%">{{ h.Name }}</td>
-                            <td width="70%"><p class="break-all">{{ h.Value }}</p></td>
+                        <tr ng-repeat="h in selectedReq.http.request_headers">
+                            <td>{{ h.name }}</td>
+                            <td width="70%"><p class="break-all">{{ h.value }}</p></td>
                         </tr>
                     </table>
                 </div>
-                <p id="request-body" class="body">
-                    {{ selectedReq.Body }}
-                </p>
+                <pre id="request-body" class="body">{{ selectedReq.request }}</pre>
             </div>
             <div id="response-detail" class="http-detail" style="float: right;">
                 <div id="response-first-line" class="first-line">
-                    {{ selectedReq.Response.Version }} {{ selectedReq.Response.Code }} {{ selectedReq.Response.Reason }}
+                    response
                 </div>
                 <div id="response-head" class="head">
                     <table width="100%">
-                        <tr ng-repeat="h in selectedReq.Response.Headers">
-                            <td width="30%">{{ h.Name }}</td>
-                            <td width="70%"><p class="break-all">{{ h.Value }}</p></td>
+                        <tr ng-repeat="h in selectedReq.http.response_headers">
+                            <td>{{ h.name }}</td>
+                            <td width="70%"><p class="break-all">{{ h.value }}</p></td>
                         </tr>
                     </table>
                 </div>
-                <p id="response-body" class="body">
-                    {{ selectedReq.Response.Body }}
-                </p>
+                <pre id="response-body" class="body">{{ selectedReq.response }}</pre>
             </div>
         </div>
     </body>

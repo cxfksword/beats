@@ -20,6 +20,8 @@ var (
 		ProtocolCommon: config.ProtocolCommon{
 			Ports:              []int{11211},
 			TransactionTimeout: protos.DefaultTransactionExpiration,
+			SendRequest:        true,
+			SendResponse:       true,
 		},
 		UdpTransactionTimeout: protos.DefaultTransactionExpiration,
 	}
