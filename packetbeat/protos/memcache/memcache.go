@@ -406,7 +406,7 @@ func (t *transaction) Event(event common.MapStr) error {
 	}
 	event["method"] = t.request.command.code
 	event["query"] = strings.Join(keys, " ")
-	event["console"] = fmt.Sprintf("%8s %s %-17s %-5s %-5s %s %s %s",
+	event["console"] = fmt.Sprintf("%8s %s %-19s %-5s %-5s %s %s %s",
 		"[MC]",
 		t.Ts.Ts.Format("15:04:05"),
 		fmt.Sprintf("%s:%d", t.Dst.Ip, t.Dst.Port),

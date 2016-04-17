@@ -317,7 +317,7 @@ func (redis *Redis) newTransaction(requ, resp *redisMessage) common.MapStr {
 	if len(message) > 100 {
 		message = message[:100] + "..."
 	}
-	event["console"] = fmt.Sprintf("%8s %s %-17s %-5s %-5s %s %s",
+	event["console"] = fmt.Sprintf("%8s %s %-19s %-5s %-5s %s %s",
 		"[REDIS]",
 		requ.Ts.Format("15:04:05"),
 		fmt.Sprintf("%s:%d", requ.TcpTuple.Dst_ip.String(), requ.TcpTuple.Dst_port),

@@ -865,7 +865,7 @@ func (mysql *Mysql) publishTransaction(t *MysqlTransaction) {
 	event["dst"] = &t.Dst
 
 	// organize console output
-	event["console"] = fmt.Sprintf("%8s %s %-17s %-5s %-5s %s",
+	event["console"] = fmt.Sprintf("%8s %s %-19s %-5s %-5s %s",
 		"[MYSQL]",
 		t.ts.Format("15:04:05"),
 		fmt.Sprintf("%s:%d", t.Dst.Ip, t.Dst.Port),

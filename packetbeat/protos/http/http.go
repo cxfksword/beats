@@ -499,7 +499,7 @@ func (http *HTTP) newTransaction(requ, resp *message) common.MapStr {
 	if contentIdx >= 0 {
 		event["raw"] = strings.TrimSpace(string(resp.Raw[contentIdx:]))
 	}
-	event["console"] = fmt.Sprintf("%8s %s %-17s %-5s %-5s %s %4s %s",
+	event["console"] = fmt.Sprintf("%8s %s %-19s %-5s %-5s %s %4s %s",
 		"[HTTP]",
 		requ.Ts.Format("15:04:05"),
 		fmt.Sprintf("%s:%d", dst.Ip, dst.Port),

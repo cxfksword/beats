@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 
 	"github.com/shiena/ansicolor"
 )
@@ -62,7 +63,7 @@ func StatusCodeColor(statusCode int) string {
 	case 503:
 		return Color(statusCode, Red)
 	default:
-		return Color(statusCode, White)
+		return strconv.Itoa(statusCode)
 	}
 }
 
