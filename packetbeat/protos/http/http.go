@@ -494,8 +494,11 @@ func (http *HTTP) newTransaction(requ, resp *message) common.MapStr {
 		event["real_ip"] = requ.RealIP
 	}
 
+	event["raw"] = ""
 	contentIdx := strings.Index(string(resp.Raw), "<html")
-	event["raw"] = strings.TrimSpace(string(resp.Raw[contentIdx:]))
+	if contentIdx >= 0 {
+		event["raw"] = strings.TrimSpace(string(resp.Raw[contentIdx:]))
+	}
 	event["console"] = fmt.Sprintf("%8s %s %-17s %-5s %-5s %s %4s %s",
 		"[HTTP]",
 		requ.Ts.Format("15:04:05"),
