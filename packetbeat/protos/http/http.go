@@ -483,9 +483,11 @@ func (http *HTTP) newTransaction(requ, resp *message) common.MapStr {
 
 	if http.SendRequest {
 		event["request"] = string(http.cutMessageBody(requ))
+		event["request_body"] = string(requ.Raw[requ.bodyOffset:])
 	}
 	if http.SendResponse {
 		event["response"] = string(http.cutMessageBody(resp))
+		event["response_body"] = string(resp.Raw[resp.bodyOffset:])
 	}
 	if len(requ.Notes)+len(resp.Notes) > 0 {
 		event["notes"] = append(requ.Notes, resp.Notes...)
@@ -494,11 +496,6 @@ func (http *HTTP) newTransaction(requ, resp *message) common.MapStr {
 		event["real_ip"] = requ.RealIP
 	}
 
-	event["raw"] = ""
-	contentIdx := strings.Index(string(resp.Raw), "<html")
-	if contentIdx >= 0 {
-		event["raw"] = strings.TrimSpace(string(resp.Raw[contentIdx:]))
-	}
 	event["console"] = fmt.Sprintf("%8s %-9s %-21s %-5s %-6s %s %4s %s",
 		"[HTTP]",
 		requ.Ts.Format("15:04:05"),
