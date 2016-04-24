@@ -22,15 +22,8 @@ const (
 	Magenta
 	Cyan
 	White
-	Default      = uint8(39)
-	Gray         = uint8(90)
-	LightRed     = uint8(91)
-	LightGreen   = uint8(92)
-	LightYellow  = uint8(93)
-	LightBlue    = uint8(94)
-	LightMagenta = uint8(95)
-	LightCyan    = uint8(96)
-	LightWhite   = uint8(97)
+	Default = uint8(39)
+	Gray    = uint8(90)
 
 	EndColor         = "\033[0m"
 	printV           = "A"
@@ -72,11 +65,11 @@ func MethodColor(method string) string {
 	case "GET":
 		return Color(method, White)
 	case "POST":
-		return Color(method, LightGreen)
+		return Color(method, Green)
 	case "DELETE":
 		return Color(method, Red)
 	case "PUT":
-		return Color(method, LightBlue)
+		return Color(method, Blue)
 	default:
 		return Color(method, Magenta)
 	}

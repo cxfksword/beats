@@ -8,7 +8,7 @@
 package pcap
 
 /*
-#cgo linux LDFLAGS: -lpcap
+#cgo linux LDFLAGS: /usr/lib/x86_64-linux-gnu/libpcap.a
 #cgo freebsd LDFLAGS: -lpcap
 #cgo darwin LDFLAGS: -lpcap
 #cgo solaris LDFLAGS: -lpcap

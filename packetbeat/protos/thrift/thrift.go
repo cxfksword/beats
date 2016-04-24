@@ -1136,7 +1136,7 @@ func (thrift *Thrift) publishTransactions() {
 		event["dst"] = &t.Dst
 
 		// organize console output
-		event["console"] = fmt.Sprintf("%8s %s %-19s %-5s %-5s %s",
+		event["console"] = fmt.Sprintf("%8s %-9s %-21s %-5s %-6s %s",
 			"[Thrift]",
 			t.ts.Format("15:04:05"),
 			fmt.Sprintf("%s:%d", t.Dst.Ip, t.Dst.Port),
