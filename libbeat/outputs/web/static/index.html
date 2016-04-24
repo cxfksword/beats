@@ -26,11 +26,12 @@
                 <thead>
                     <tr>
                     <th width="5%">Type</th>
-                    <th width="15%">Time</th>
+                    <th width="10%">Time</th>
+                    <th width="10%">ClientIp</th>
                     <th width="10%">ServerIp</th>
                     <th width="5%">Status</th>
                     <th width="5%">Method</th>
-                    <th width="50%">Query</th>
+                    <th width="40%">Query</th>
                     <th width="5%">Size</th>
                     <th width="5%">Duration</th>
                     </tr>
@@ -38,6 +39,7 @@
                 <tr ng-repeat="req in reqs | reqFilter:protosType:pattern" ng-click="showDetail($event, req)">
                     <td>{{ req.type }}</td>
                     <td>{{ req.timestamp }}</td>
+                    <td>{{ req.client_ip }}:{{ req.client_port }}</td>
                     <td>{{ req.ip }}:{{ req.port }}</td>
                     <td>{{ req.status }}</td>
                     <td>{{ req.method }}</td>

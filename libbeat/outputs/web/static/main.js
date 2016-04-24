@@ -37,7 +37,9 @@ app.factory('netdata', function($websocket) {
         if (!e) {
             return;
         }
-        e.timestamp = e['@timestamp'];
+
+        var d = new Date(e['@timestamp']);
+        e.timestamp = (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes()+":"+d.getSeconds();
         e.request = $.trim(e.request);
         e.response = $.trim(e.response);
         if (e.type == 'http') {
@@ -51,6 +53,7 @@ app.factory('netdata', function($websocket) {
                 headers.push({'name': arr[0], 'value': arr[1]});
             }
             e.http.request_headers = headers;
+            e.request = e.request_body;
 
             headers = [];
             headerArr = e.response.split("\n");
@@ -59,8 +62,7 @@ app.factory('netdata', function($websocket) {
                 headers.push({'name': arr[0], 'value': arr[1]});
             }
             e.http.response_headers = headers;
-
-            e.response = e.raw;
+            e.response = e.response_body;
 
         }
         reqs.push(e);
