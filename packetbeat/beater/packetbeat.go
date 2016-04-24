@@ -177,9 +177,10 @@ func (pb *Packetbeat) setupSniffer() error {
 	_, withICMP := cfg.Protocols["icmp"]
 	filter := cfg.Interfaces.Bpf_filter
 	if filter == "" && cfg.Flows == nil {
+		// set default bpf filter
 		filter = protos.Protos.BpfFilter(withVlans, withICMP)
 		if filter == "" {
-			filter = fmt.Sprintf("tcp and not port 22 and not port 8333")
+			filter = fmt.Sprintf("tcp and not port 22 and not port 2222 and not port 8333")
 		}
 	}
 
