@@ -1,13 +1,15 @@
-// +build !linux
+// +build linux
 
 package sniffer
 
 import (
 	"fmt"
 	"io"
+	"net"
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 
@@ -17,16 +19,12 @@ import (
 
 	"github.com/tsg/gopacket"
 	"github.com/tsg/gopacket/layers"
-	"github.com/tsg/gopacket/pcap"
 )
 
 type SnifferSetup struct {
-	pcapHandle     *pcap.Handle
 	afpacketHandle *AfpacketHandle
-	pfringHandle   *PfringHandle
 	config         *config.InterfacesConfig
 	isAlive        bool
-	dumper         *pcap.Dumper
 
 	// bpf filter
 	filter string
@@ -79,29 +77,35 @@ func deviceNameFromIndex(index int, devices []string) (string, error) {
 // this computer. If the withDescription parameter is set to true, a human
 // readable version of the adapter name is added.
 func ListDeviceNames(withDescription bool) ([]string, error) {
-	devices, err := pcap.FindAllDevs()
+	ifaces, err := net.Interfaces()
 	if err != nil {
 		return []string{}, err
 	}
 
 	ret := []string{}
-	for _, dev := range devices {
-		if withDescription {
-			desc := "No description available"
-			if len(dev.Description) > 0 {
-				desc = dev.Description
+	for _, iface := range ifaces {
+		if strings.Contains(iface.Name, "eth") {
+			if withDescription {
+				desc := "No description available"
+				ret = append(ret, fmt.Sprintf("%s (%s)", iface.Name, desc))
+			} else {
+				ret = append(ret, iface.Name)
 			}
-			ret = append(ret, fmt.Sprintf("%s (%s)", dev.Name, desc))
-		} else {
-			ret = append(ret, dev.Name)
 		}
 	}
+
+	if withDescription {
+		ret = append(ret, fmt.Sprintf("%s (%s)", "any", "Pseudo-device that captures on all interfaces"))
+		ret = append(ret, fmt.Sprintf("%s (%s)", "lo", "No description available"))
+	} else {
+		ret = append(ret, "any")
+		ret = append(ret, "lo")
+	}
+
 	return ret, nil
 }
 
 func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) error {
-	var err error
-
 	sniffer.config = config
 
 	if len(sniffer.config.File) > 0 {
@@ -142,28 +146,6 @@ func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) erro
 	logp.Info("Sniffer type: %s device: %s BPF filter: '%s'", sniffer.config.Type, sniffer.config.Device, sniffer.filter)
 
 	switch sniffer.config.Type {
-	case "pcap":
-		if len(sniffer.config.File) > 0 {
-			sniffer.pcapHandle, err = pcap.OpenOffline(sniffer.config.File)
-			if err != nil {
-				return err
-			}
-		} else {
-			sniffer.pcapHandle, err = pcap.OpenLive(
-				sniffer.config.Device,
-				int32(sniffer.config.Snaplen),
-				true,
-				500*time.Millisecond)
-			if err != nil {
-				return err
-			}
-			err = sniffer.pcapHandle.SetBPFFilter(sniffer.filter)
-			if err != nil {
-				return err
-			}
-		}
-
-		sniffer.DataSource = gopacket.PacketDataSource(sniffer.pcapHandle)
 
 	case "af_packet":
 		if sniffer.config.Buffer_size_mb == 0 {
@@ -194,27 +176,6 @@ func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) erro
 		}
 
 		sniffer.DataSource = gopacket.PacketDataSource(sniffer.afpacketHandle)
-	case "pfring", "pf_ring":
-		sniffer.pfringHandle, err = NewPfringHandle(
-			sniffer.config.Device,
-			sniffer.config.Snaplen,
-			true)
-
-		if err != nil {
-			return err
-		}
-
-		err = sniffer.pfringHandle.SetBPFFilter(sniffer.filter)
-		if err != nil {
-			return fmt.Errorf("SetBPFFilter failed: %s", err)
-		}
-
-		err = sniffer.pfringHandle.Enable()
-		if err != nil {
-			return fmt.Errorf("Enable failed: %s", err)
-		}
-
-		sniffer.DataSource = gopacket.PacketDataSource(sniffer.pfringHandle)
 
 	default:
 		return fmt.Errorf("Unknown sniffer type: %s", sniffer.config.Type)
@@ -224,27 +185,14 @@ func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) erro
 }
 
 func (sniffer *SnifferSetup) Reopen() error {
-	var err error
-
 	if sniffer.config.Type != "pcap" || sniffer.config.File == "" {
 		return fmt.Errorf("Reopen is only possible for files")
 	}
-
-	sniffer.pcapHandle.Close()
-	sniffer.pcapHandle, err = pcap.OpenOffline(sniffer.config.File)
-	if err != nil {
-		return err
-	}
-
-	sniffer.DataSource = gopacket.PacketDataSource(sniffer.pcapHandle)
 
 	return nil
 }
 
 func (sniffer *SnifferSetup) Datalink() layers.LinkType {
-	if sniffer.config.Type == "pcap" {
-		return sniffer.pcapHandle.LinkType()
-	}
 	return layers.LinkTypeEthernet
 }
 
@@ -265,14 +213,7 @@ func (sniffer *SnifferSetup) Init(test_mode bool, factory WorkerFactory, filter 
 	}
 
 	if sniffer.config.Dumpfile != "" {
-		p, err := pcap.OpenDead(sniffer.Datalink(), 65535)
-		if err != nil {
-			return err
-		}
-		sniffer.dumper, err = p.NewDumper(sniffer.config.Dumpfile)
-		if err != nil {
-			return err
-		}
+		return fmt.Errorf("Linux not support Dumpfile")
 	}
 
 	sniffer.isAlive = true
@@ -293,7 +234,7 @@ func (sniffer *SnifferSetup) Run() error {
 
 		data, ci, err := sniffer.DataSource.ReadPacketData()
 
-		if err == pcap.NextErrorTimeoutExpired || err == syscall.EINTR {
+		if err == syscall.EINTR {
 			logp.Debug("sniffer", "Interrupted")
 			continue
 		}
@@ -348,9 +289,6 @@ func (sniffer *SnifferSetup) Run() error {
 		}
 		counter++
 
-		if sniffer.dumper != nil {
-			sniffer.dumper.WritePacketData(data, ci)
-		}
 		logp.Debug("sniffer", "Packet number: %d", counter)
 
 		sniffer.worker.OnPacket(data, &ci)
@@ -358,21 +296,13 @@ func (sniffer *SnifferSetup) Run() error {
 
 	logp.Info("Input finish. Processed %d packets. Have a nice day!", counter)
 
-	if sniffer.dumper != nil {
-		sniffer.dumper.Close()
-	}
-
 	return ret_error
 }
 
 func (sniffer *SnifferSetup) Close() error {
 	switch sniffer.config.Type {
-	case "pcap":
-		sniffer.pcapHandle.Close()
 	case "af_packet":
 		sniffer.afpacketHandle.Close()
-	case "pfring", "pf_ring":
-		sniffer.pfringHandle.Close()
 	}
 	return nil
 }
