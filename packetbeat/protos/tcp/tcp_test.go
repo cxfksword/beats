@@ -13,8 +13,8 @@ import (
 	"github.com/cxfksword/beats/packetbeat/protos"
 	"github.com/cxfksword/beats/packetbeat/publish"
 
+	"github.com/cxfksword/gopacket/layers"
 	"github.com/stretchr/testify/assert"
-	"github.com/tsg/gopacket/layers"
 )
 
 // Test Constants

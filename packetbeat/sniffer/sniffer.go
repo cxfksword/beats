@@ -15,9 +15,9 @@ import (
 
 	"github.com/cxfksword/beats/packetbeat/config"
 
-	"github.com/tsg/gopacket"
-	"github.com/tsg/gopacket/layers"
-	"github.com/tsg/gopacket/pcap"
+	"github.com/cxfksword/gopacket"
+	"github.com/cxfksword/gopacket/layers"
+	"github.com/cxfksword/gopacket/pcap"
 )
 
 type SnifferSetup struct {

@@ -9,7 +9,7 @@ import (
 	"github.com/cxfksword/beats/packetbeat/flows"
 	"github.com/cxfksword/beats/packetbeat/protos"
 
-	"github.com/tsg/gopacket/layers"
+	"github.com/cxfksword/gopacket/layers"
 )
 
 const TCP_MAX_DATA_IN_STREAM = 10 * (1 << 20)
@@ -93,6 +93,8 @@ func (conn *TcpConnection) String() string {
 }
 
 func (stream *TcpStream) addPacket(pkt *protos.Packet, tcphdr *layers.TCP) {
+	debugf("%s:%d -> %s:%d", pkt.Tuple.Src_ip, pkt.Tuple.Src_port, pkt.Tuple.Dst_ip, pkt.Tuple.Dst_port)
+
 	conn := stream.conn
 	mod := conn.tcp.protocols.GetTcp(conn.protocol)
 	if mod == nil {

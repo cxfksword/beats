@@ -5,7 +5,7 @@ package icmp
 import (
 	"testing"
 
-	"github.com/tsg/gopacket/layers"
+	"github.com/cxfksword/gopacket/layers"
 
 	"github.com/stretchr/testify/assert"
 )

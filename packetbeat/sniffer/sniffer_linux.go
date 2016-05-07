@@ -17,8 +17,8 @@ import (
 
 	"github.com/cxfksword/beats/packetbeat/config"
 
-	"github.com/tsg/gopacket"
-	"github.com/tsg/gopacket/layers"
+	"github.com/cxfksword/gopacket"
+	"github.com/cxfksword/gopacket/layers"
 )
 
 type SnifferSetup struct {
@@ -197,8 +197,9 @@ func (sniffer *SnifferSetup) Datalink() layers.LinkType {
 }
 
 func (sniffer *SnifferSetup) Init(test_mode bool, factory WorkerFactory, filter string) error {
-	var err error
+	logp.Debug("sniffer", "Init")
 
+	var err error
 	sniffer.filter = filter
 	if !test_mode {
 		err = sniffer.setFromConfig(&config.ConfigSingleton.Interfaces)
@@ -222,6 +223,8 @@ func (sniffer *SnifferSetup) Init(test_mode bool, factory WorkerFactory, filter 
 }
 
 func (sniffer *SnifferSetup) Run() error {
+	logp.Debug("sniffer", "Run")
+
 	counter := 0
 	loopCount := 1
 	var lastPktTime *time.Time = nil

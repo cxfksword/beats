@@ -5,7 +5,7 @@ package sniffer
 import (
 	"fmt"
 
-	"github.com/tsg/gopacket"
+	"github.com/cxfksword/gopacket"
 )
 
 type PfringHandle struct {

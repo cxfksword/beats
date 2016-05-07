@@ -10,9 +10,9 @@ import (
 	"github.com/cxfksword/beats/packetbeat/flows"
 	"github.com/cxfksword/beats/packetbeat/protos"
 
+	"github.com/cxfksword/gopacket"
+	"github.com/cxfksword/gopacket/layers"
 	"github.com/stretchr/testify/assert"
-	"github.com/tsg/gopacket"
-	"github.com/tsg/gopacket/layers"
 )
 
 type TestIcmp4Processor struct {

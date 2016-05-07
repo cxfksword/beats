@@ -11,7 +11,7 @@ import (
 	"github.com/cxfksword/beats/libbeat/common/droppriv"
 	"github.com/cxfksword/beats/libbeat/logp"
 	"github.com/cxfksword/beats/libbeat/service"
-	"github.com/tsg/gopacket/layers"
+	"github.com/cxfksword/gopacket/layers"
 
 	"github.com/cxfksword/beats/packetbeat/config"
 	"github.com/cxfksword/beats/packetbeat/decoder"
@@ -177,11 +177,11 @@ func (pb *Packetbeat) setupSniffer() error {
 	_, withICMP := cfg.Protocols["icmp"]
 	filter := cfg.Interfaces.Bpf_filter
 	if filter == "" && cfg.Flows == nil {
-		// set default bpf filter
 		filter = protos.Protos.BpfFilter(withVlans, withICMP)
-		if filter == "" {
-			filter = fmt.Sprintf("tcp and not port 22 and not port 2222 and not port 8333")
-		}
+	}
+	// set default bpf filter
+	if filter == "" {
+		filter = fmt.Sprintf("tcp and not port 22 and not port 2222 and not port 8333")
 	}
 
 	pb.Sniff = &sniffer.SnifferSetup{}

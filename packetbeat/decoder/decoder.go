@@ -10,8 +10,8 @@ import (
 	"github.com/cxfksword/beats/packetbeat/protos/tcp"
 	"github.com/cxfksword/beats/packetbeat/protos/udp"
 
-	"github.com/tsg/gopacket"
-	"github.com/tsg/gopacket/layers"
+	"github.com/cxfksword/gopacket"
+	"github.com/cxfksword/gopacket/layers"
 )
 
 var debugf = logp.MakeDebug("decoder")

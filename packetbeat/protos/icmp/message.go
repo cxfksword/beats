@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/cxfksword/beats/libbeat/logp"
-	"github.com/tsg/gopacket/layers"
+	"github.com/cxfksword/gopacket/layers"
 )
 
 // TODO: more types (that are not provided as constants in gopacket)

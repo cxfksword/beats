@@ -11,7 +11,7 @@ import (
 	"github.com/cxfksword/beats/packetbeat/protos"
 	"github.com/cxfksword/beats/packetbeat/publish"
 
-	"github.com/tsg/gopacket/layers"
+	"github.com/cxfksword/gopacket/layers"
 )
 
 type ICMPv4Processor interface {
