@@ -33,6 +33,9 @@ app.factory('netdata', function($websocket) {
     var streams = {};
     var reqs = [];
     dataStream.onMessage(function(message) {
+        if ($('#stop').val() == 'Start') {
+            return;
+        }
         var e = JSON.parse(message.data);
         if (!e) {
             return;
@@ -95,6 +98,17 @@ app.controller('HttpListCtrl', function ($scope, netdata) {
             }
         }
         return null;
+    }
+    $scope.stopListen = function ($event) {
+        var btn = $event.currentTarget;
+        if ($(btn).val() == 'Stop') {
+            $(btn).val('Start');
+        } else {
+            $(btn).val('Stop');
+        }
+    }
+    $scope.clearRequests = function ($event) {
+        netdata.reqs.length = 0;
     }
     $scope.selectedRow = null;
     $scope.filterType = "Uri";

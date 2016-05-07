@@ -1,15 +1,19 @@
 <html ng-app="netgraph" ng-controller="HttpListCtrl">
     <head>
+        <meta charset="utf-8">
         <title>[{{reqs.length}}] packetbeat web output</title>
+        <link href="main.css" rel="stylesheet">
+        <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
         <script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
         <script src="http://cdn.bootcss.com/snap.svg/0.4.1/snap.svg-min.js"></script>
         <script src="http://cdn.bootcss.com/angular.js/1.4.4/angular.min.js"></script>
         <script src="http://cdn.bootcss.com/angular-websocket/1.0.0/angular-websocket.min.js"></script>
-        <script src="/main.js"></script>
-        <link href="/main.css" rel="stylesheet">
+        <script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="main.js"></script>
     </head>
     <body>
         <h2>packetbeat</h2>
+        <div class="nav">
         Type:
         <select ng-model="protosType">
             <option value="">all</option>
@@ -21,6 +25,10 @@
         </select>
         Filter:
         <input ng-model="pattern">
+
+        <input id="stop" type="button" value="Stop" ng-click="stopListen($event)"/>
+        <input id="clear" type="button" value="Clear" ng-click="clearRequests($event)"/>
+        </div>
         <div class="requests">
             <table width="100%">
                 <thead>
