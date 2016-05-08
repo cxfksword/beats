@@ -83,7 +83,7 @@ func (s *WebServer) Start() {
 	http.HandleFunc("/", s.handleStaticFile)
 
 	logp.Info("web output listen on%s", s.addr)
-	fmt.Printf("Please goto http://%s%s for details.\n", GetHostIp(), s.addr)
+	fmt.Printf("Please goto \033[33mhttp://%s%s\033[0m for details.\n", GetHostIp(), s.addr)
 	err := http.ListenAndServe(s.addr, nil)
 	if err != nil {
 		logp.Err("can't start web output server: %v", err)

@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/shiena/ansicolor"
 )
@@ -40,23 +41,16 @@ func ColorStart(color uint8) string {
 }
 
 func StatusCodeColor(statusCode int) string {
-	switch statusCode {
-	case 301:
-		fallthrough
-	case 302:
-		fallthrough
-	case 304:
+	code := strconv.Itoa(statusCode)
+	switch {
+	case strings.HasPrefix(code, "3"):
 		return Color(statusCode, Cyan)
-	case 403:
-		fallthrough
-	case 404:
+	case strings.HasPrefix(code, "4"):
 		return Color(statusCode, Yellow)
-	case 500:
-		fallthrough
-	case 503:
+	case strings.HasPrefix(code, "5"):
 		return Color(statusCode, Red)
 	default:
-		return strconv.Itoa(statusCode)
+		return code
 	}
 }
 
