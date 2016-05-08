@@ -1,90 +1,111 @@
 <html ng-app="netgraph" ng-controller="HttpListCtrl">
     <head>
         <meta charset="utf-8">
-        <title>[{{reqs.length}}] packetbeat web output</title>
-        <link href="main.css" rel="stylesheet">
+        <title>[{{reqs.length}}] Packetbeat</title>
         <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+        <link href="main.css" rel="stylesheet">
         <script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
         <script src="http://cdn.bootcss.com/snap.svg/0.4.1/snap.svg-min.js"></script>
         <script src="http://cdn.bootcss.com/angular.js/1.4.4/angular.min.js"></script>
-        <script src="http://cdn.bootcss.com/angular-websocket/1.0.0/angular-websocket.min.js"></script>
         <script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="angular-websocket.js"></script>
         <script src="main.js"></script>
     </head>
     <body>
-        <h2>packetbeat</h2>
-        <div class="nav">
-        Type:
-        <select ng-model="protosType">
-            <option value="">all</option>
-            <option value="http">http</option>
-            <option value="memcache">memcache</option>
-            <option value="redis">redis</option>
-            <option value="mysql">mysql</option>
-            <option value="thrift">thrift</option>
-        </select>
-        Filter:
-        <input ng-model="pattern">
-
-        <input id="stop" type="button" value="Stop" ng-click="stopListen($event)"/>
-        <input id="clear" type="button" value="Clear" ng-click="clearRequests($event)"/>
-        </div>
-        <div class="requests">
-            <table width="100%">
-                <thead>
-                    <tr>
-                    <th width="5%">Type</th>
-                    <th width="10%">Time</th>
-                    <th width="10%">ClientIp</th>
-                    <th width="10%">ServerIp</th>
-                    <th width="5%">Status</th>
-                    <th width="5%">Method</th>
-                    <th width="40%">Query</th>
-                    <th width="5%">Size</th>
-                    <th width="5%">Duration</th>
-                    </tr>
-                </thead>
-                <tr ng-repeat="req in reqs | reqFilter:protosType:pattern" ng-click="showDetail($event, req)">
-                    <td>{{ req.type }}</td>
-                    <td>{{ req.timestamp }}</td>
-                    <td>{{ req.client_ip }}:{{ req.client_port }}</td>
-                    <td>{{ req.ip }}:{{ req.port }}</td>
-                    <td>{{ req.status }}</td>
-                    <td>{{ req.method }}</td>
-                    <td>{{ req.query }}</td>
-                    <td>{{ req.bytes_out/1000 }}KB</td>
-                    <td>{{ req.responsetime }}ms</td>
-                </tr>
-            </table>
-        </div>
-        <div id="detail" style="width:100%">
-            <div id="request-detail" class="http-detail" style="float: left;">
-                <div id="request-first-line" class="first-line">
-                    request
-                </div>
-                <div id="request-head" class="head">
-                    <table width="100%">
-                        <tr ng-repeat="h in selectedReq.http.request_headers">
-                            <td>{{ h.name }}</td>
-                            <td width="70%"><p class="break-all">{{ h.value }}</p></td>
-                        </tr>
-                    </table>
-                </div>
-                <pre id="request-body" class="body">{{ selectedReq.request }}</pre>
+        <nav class="navbar navbar-dash navbar-fixed-top">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">
+                <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span> Packetheat
+              </a>
             </div>
-            <div id="response-detail" class="http-detail" style="float: right;">
-                <div id="response-first-line" class="first-line">
-                    response
+          </div>
+        </nav>
+
+        <div id="content">
+            <div class="row">
+                <div class="col-md-8">
+                <form class="form-inline">
+                  <div class="form-group">
+                    <label>Type:</label>
+                    <select class="form-control" ng-model="protosType">
+                        <option value="">all</option>
+                        <option value="http">http</option>
+                        <option value="memcache">memcache</option>
+                        <option value="redis">redis</option>
+                        <option value="mysql">mysql</option>
+                        <option value="thrift">thrift</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Filter:</label>
+                    <input class="form-control" ng-model="pattern">
+                  </div>
+                  <button type="button" id="stop" class="form-control" ng-click="stopListen($event)">
+                  <span class="glyphicon glyphicon-pause"></span> Stop</button>
+
+                  <button type="button" id="clear" class="form-control" ng-click="clearRequests($event)">
+                  <span class="glyphicon glyphicon-remove"></span> Clear</button>
+
+                </form>
                 </div>
-                <div id="response-head" class="head">
-                    <table width="100%">
-                        <tr ng-repeat="h in selectedReq.http.response_headers">
-                            <td>{{ h.name }}</td>
-                            <td width="70%"><p class="break-all">{{ h.value }}</p></td>
-                        </tr>
-                    </table>
+                <div class="col-md-4">
+                    <label id="connstate"><span class="glyphicon glyphicon-record" aria-hidden="true"></span></label>
                 </div>
-                <pre id="response-body" class="body">{{ selectedReq.response }}</pre>
+            </div>
+
+            <div class="line-break">&nbsp;</div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="requests">
+                        <table class="table table-req">
+                            <thead>
+                                <tr>
+                                <th width="3%">#</th>
+                                <th width="5%">Type</th>
+                                <th width="5%">Method</th>
+                                <th width="37%">Query</th>
+                                <th width="5%">Status</th>
+                                <th width="10%">Time</th>
+                                <th width="10%">ClientIp</th>
+                                <th width="10%">ServerIp</th>
+                                <th width="5%">Size</th>
+                                <th width="5%">Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="req in reqs | reqFilter:protosType:pattern" ng-click="showDetail($event, req)">
+                                <td>{{ $index+1 }}</td>
+                                <td>{{ req.type }}</td>
+                                <td>{{ req.method }}</td>
+                                <td class="word-break">{{ req.query }}</td>
+                                <td>{{ req.status }}</td>
+                                <td>{{ req.timestamp }}</td>
+                                <td>{{ req.client_ip }}:{{ req.client_port }}</td>
+                                <td>{{ req.ip }}:{{ req.port }}</td>
+                                <td>{{ req.bytes_out/1000 }}KB</td>
+                                <td>{{ req.responsetime }}ms</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <ul id="detail-tab" class="nav nav-tabs nav-justified">
+                      <li class="active"><a href="#request-detail" aria-controls="request-detail" role="tab" data-toggle="tab">request</a></li>
+                      <li><a href="#response-detail" aria-controls="response-detail" role="tab" data-toggle="tab">response</a></li>
+                    </ul>
+                    <div id="detail"  class="tab-content">
+                        <div id="request-detail"  role="tabpanel" class="tab-pane active">
+                            <pre id="request-body" class="body">{{ selectedReq.request+"\n\n" }}{{ selectedReq.request_body }}</pre>
+                        </div>
+                        <div id="response-detail"  role="tabpanel" class="tab-pane">
+                            <pre id="response-body" class="body">{{ selectedReq.response+"\n\n" }}{{ selectedReq.response_body }}</pre>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </body>

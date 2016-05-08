@@ -1,6 +1,75 @@
+body {
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #cfd2da;
+    background-color: #252830;
+
+    padding: 0px;
+    margin:0px;
+}
+
+.navbar-dash {
+    background-color: #1a1c22;
+    border-color: #1a1c22;
+}
+.navbar-dash a {
+    color: #fff;
+    background-color: #1a1c22;
+}
+.form-control {
+    display: block;
+    width: 100%;
+    height: 35px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #ffffff;
+    background-color: #434857;
+    background-image: none;
+    border: 1px solid #434857;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+#content {
+    margin-top: 80px;
+    padding: 0 40px;
+}
+.line-break {
+position: relative;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    text-transform: uppercase;
+        margin-bottom: 20px !important;
+            margin-top: 10px !important;
+}
+.line-break:before {
+    position: absolute;
+    top: 50%;
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: #434857;
+}
 .requests {
-    height: 400px;
-    overflow: scroll;
+    overflow: auto;
+    height: 720px;
+}
+#detail {
+    padding: 20px 10px 30px 10px;
+    border-top: 0px;
+    border-left: 1px solid  #434857;
+    border-right: 1px solid  #434857;
+    border-bottom: 1px solid  #434857;
+    overflow-y:auto;
+    overflow-x:hidden;
+        height: 680px;
+}
+#request-detial {
+
 }
 .http-detail {
     width: 49%;
@@ -10,44 +79,106 @@
     display: block;
     font-family: 'Courier New', Courier, monospace;
 }
-table {
-    border-top: 1px solid;
-    border-bottom: 1px solid;
-    font-family: 'Courier New', Courier, monospace;
-    table-layout: fixed;
-}
-.body {
-    width: 100%;
-    word-break: break-all;
-    padding-left: 5px;
-    padding-right: 5px;
-}
 .break-all {
     word-break: break-all;
     overflow: auto
 }
 
-.requests td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.table-req {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: #cfd2da !important;
+    width: 1024px;
 }
-table th {
-    text-align: left;
+.table-req th {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    font-family: 'Courier New', Courier, monospace;
+    table-layout: fixed;
+        vertical-align: bottom;
+    border-bottom: 2px solid #434857 !important;
+
+}
+.table-req td {
+        padding: 8px;
+    line-height: 1.5;
+    vertical-align: top;
+    border-top: 1px solid #434857 !important;
+}
+.word-break {
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.nav-tabs>li>a,.nav-tabs>li>a:focus {
+    font-weight: bold;
+    color: #cfd2da !important;
+    background-color: #252830 !important;
+    border-bottom-color: #252830;
+}
+.nav-tabs>li>a:hover {
+    font-weight: bold;
+    color: #cfd2da !important;
+    background-color: #434857 !important;
+    border-bottom-color: #252830;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    border-bottom:0px;
+    color: #cfd2da !important;
+    background-color: #252830 !important;
+}
+.nav-tabs.nav-justified>li>a, .nav-tabs.nav-justified>li>a:focus, .nav-tabs.nav-justified>li>a:hover {
+    border-bottom:1px solid  #434857;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+}
+.nav-tabs.nav-justified>.active>a, .nav-tabs.nav-justified>.active>a:focus, .nav-tabs.nav-justified>.active>a:hover {
+    border-bottom:0px;
+    border-top: 1px solid  #434857;
+    border-left: 1px solid  #434857;
+    border-right: 1px solid  #434857;
 }
 table tr:nth-child(even) {
-    background-color: #eee;
+
 }
 table tr:nth-child(odd) {
-    background-color: #fff;
+
 }
-table tr:nth-child(odd):hover {
-    background-color: yellow;
+table tbody tr:nth-child(odd):hover {
+    background-color: #434857;
 }
-table tr:nth-child(even):hover {
-    background-color: yellow;
+table tbody tr:nth-child(even):hover {
+    background-color: #434857;
 }
 
 .first-line {
     font-weight: bold;
 }
+.btn-warning-outline {
+        color: #e1d420;
+    background-color: transparent;
+    border-color: #e1d420;
+}
+.btn-warning-outline:hover, .btn-warning-outline:focus{
+        color: #ffffff;
+    background-color: #e1d420;
+    box-shadow: none;
+}
+#connstate {
+    margin-top: 10px;
+    float: right;
+    width: 100px;
+    font-weight: normal;
+    color: #e33145;
+    font-size: 16px;
+}
+#connstate:after{
+    content: " Disconnect";
+}
+#connstate.active {
+    color: #18b37e;
+}
+#connstate.active:after {
+    content: " Connected";
+}
+

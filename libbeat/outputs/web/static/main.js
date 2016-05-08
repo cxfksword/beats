@@ -29,11 +29,12 @@ angular.module('ngFilter', []).filter('reqFilter', function() {
 });
 var app = angular.module('netgraph', ['angular-websocket', 'ngFilter'])
 app.factory('netdata', function($websocket) {
-    var dataStream = $websocket("ws://" + location.host + "/data");
+    var dataStream = new $websocket("ws://" + location.host + "/data", null, {reconnectAttempts: 10,reconnectIfNotNormalClose:true});
     var streams = {};
     var reqs = [];
+
     dataStream.onMessage(function(message) {
-        if ($('#stop').val() == 'Start') {
+        if ($.trim($('#stop').text()) == 'Start') {
             return;
         }
         var e = JSON.parse(message.data);
@@ -42,7 +43,8 @@ app.factory('netdata', function($websocket) {
         }
 
         var d = new Date(e['@timestamp']);
-        e.timestamp = (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes()+":"+d.getSeconds();
+        // e.timestamp = (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes()+":"+d.getSeconds();
+        e.timestamp = d.getHours() + ":" + d.getMinutes()+":"+d.getSeconds();
         e.request = $.trim(e.request);
         e.response = $.trim(e.response);
         if (e.type == 'http') {
@@ -56,7 +58,7 @@ app.factory('netdata', function($websocket) {
                 headers.push({'name': arr[0], 'value': arr[1]});
             }
             e.http.request_headers = headers;
-            e.request = e.request_body;
+            // e.request = e.request_body;
 
             headers = [];
             headerArr = e.response.split("\n");
@@ -65,11 +67,21 @@ app.factory('netdata', function($websocket) {
                 headers.push({'name': arr[0], 'value': arr[1]});
             }
             e.http.response_headers = headers;
-            e.response = e.response_body;
+            // e.response = e.response_body;
 
         }
         reqs.push(e);
     });
+    dataStream.onOpen(function (event) {
+        $('#connstate').addClass('active');
+    });
+    dataStream.onError(function (event) {
+        $('#connstate').removeClass('active');
+    });
+    dataStream.onClose(function (event) {
+        $('#connstate').removeClass('active');
+    });
+
     var data = {
         reqs: reqs,
         streams: streams,
@@ -88,7 +100,7 @@ app.controller('HttpListCtrl', function ($scope, netdata) {
             $($scope.selectedRow).attr("style", "");
         }
         $scope.selectedRow = tr;
-        $(tr).attr("style", "background-color: lightgreen");
+        $(tr).attr("style", "background-color: #434857");
     }
     $scope.getHost = function(req) {
         for (var i = 0; i < req.Headers.length; ++i) {
@@ -101,15 +113,20 @@ app.controller('HttpListCtrl', function ($scope, netdata) {
     }
     $scope.stopListen = function ($event) {
         var btn = $event.currentTarget;
-        if ($(btn).val() == 'Stop') {
-            $(btn).val('Start');
+        if ($.trim($(btn).text()) == 'Stop') {
+            $(btn).html('<span class="glyphicon glyphicon-play"></span> Start');
         } else {
-            $(btn).val('Stop');
+            $(btn).html('<span class="glyphicon glyphicon-pause"></span> Stop');
         }
     }
     $scope.clearRequests = function ($event) {
         netdata.reqs.length = 0;
     }
+    $('#detail-tab a').click(function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    });
+
     $scope.selectedRow = null;
     $scope.filterType = "Uri";
     $scope.order = "Timestamp";
