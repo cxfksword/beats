@@ -163,7 +163,7 @@ func (*parser) parseHTTPLine(s *stream, m *message) (cont, ok, complete bool) {
 		m.Method = common.NetString(slices[0])
 		m.RequestURI = common.NetString(slices[1])
 
-		if bytes.Equal(slices[2][:5], []byte("HTTP/")) {
+		if len(slices[2]) > 5 && bytes.Equal(slices[2][:5], []byte("HTTP/")) {
 			m.IsRequest = true
 			version = slices[2][5:]
 		} else {

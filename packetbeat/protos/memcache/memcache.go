@@ -394,8 +394,10 @@ func (t *transaction) Event(event common.MapStr) error {
 			mc["protocol_type"] = "text"
 		}
 	}
-
-	// organize console output
+	//if t.request == nil || t.response == nil {
+	//        return fmt.Errorf("mc error")
+        //}
+        // organize console output
 	keys := []string{}
 	for _, key := range t.request.keys {
 		keys = append(keys, key.String())
@@ -404,8 +406,14 @@ func (t *transaction) Event(event common.MapStr) error {
 	if mc["request"].(common.MapStr)["type"] == "Store" {
 		result = color.Color(fmt.Sprintf("→ %dB", mc["request"].(common.MapStr)["bytes"]), color.Gray)
 	}
-	event["method"] = t.request.command.code
+	event["method"] = t.request.command.code.String()
 	event["query"] = strings.Join(keys, " ")
+        event["request"] = fmt.Sprintf("%s %s", t.request.command.code, event["query"])
+        if t.response.isBinary {
+		event["response"] = "<binary>"
+	} else {
+		event["response"] = t.response.str.String()
+	}
 	event["console"] = fmt.Sprintf("%8s %-9s %-21s %-5s %-6s %s %s %s",
 		"[MC]",
 		t.Ts.Ts.Format("15:04:05"),
