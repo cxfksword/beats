@@ -176,7 +176,10 @@ func (mc *Memcache) finishTransaction(t *transaction) error {
 
 func (mc *Memcache) onTransaction(t *transaction) {
 	event := common.MapStr{}
-	t.Event(event)
+	err := t.Event(event)
+	if err != nil {
+		return
+        }
 	debug("publish event: %s", event)
 	mc.results.PublishTransaction(event)
 }
@@ -394,9 +397,10 @@ func (t *transaction) Event(event common.MapStr) error {
 			mc["protocol_type"] = "text"
 		}
 	}
-	//if t.request == nil || t.response == nil {
-	//        return fmt.Errorf("mc error")
-        //}
+	if t.request == nil || t.response == nil {
+	        return fmt.Errorf("mc error: request or response empty.")
+        }
+
         // organize console output
 	keys := []string{}
 	for _, key := range t.request.keys {
@@ -412,7 +416,7 @@ func (t *transaction) Event(event common.MapStr) error {
         if t.response.isBinary {
 		event["response"] = "<binary>"
 	} else {
-		event["response"] = t.response.str.String()
+		event["response"] = t.response.String()
 	}
 	event["console"] = fmt.Sprintf("%8s %-9s %-21s %-5s %-6s %s %s %s",
 		"[MC]",
