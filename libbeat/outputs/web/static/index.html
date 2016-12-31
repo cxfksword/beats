@@ -62,30 +62,28 @@
                         <table class="table table-req">
                             <thead>
                                 <tr>
-                                <th width="3%">#</th>
+                                <th width="7%">Time</th>
                                 <th width="5%">Type</th>
                                 <th width="5%">Method</th>
                                 <th width="37%">Query</th>
                                 <th width="5%">Status</th>
-                                <th width="10%">Time</th>
-                                <th width="10%">ClientIp</th>
-                                <th width="10%">ServerIp</th>
-                                <th width="5%">Size</th>
                                 <th width="5%">Duration</th>
+                                <th width="10%">ServerIp</th>
+                                <th width="10%">ClientIp</th>
+                                <th width="5%">Size</th>
                                 </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="req in reqs | reqFilter:protosType:pattern" ng-click="showDetail($event, req)">
-                                <td>{{ $index+1 }}</td>
+                                <td>{{ req.timestamp }}</td>
                                 <td>{{ req.type }}</td>
                                 <td>{{ req.method }}</td>
-                                <td class="word-break">{{ req.query }}</td>
+                                <td  class="word-break">{{ req.query }}</td>
                                 <td>{{ req.status }}</td>
-                                <td>{{ req.timestamp }}</td>
-                                <td>{{ req.client_ip }}:{{ req.client_port }}</td>
-                                <td>{{ req.ip }}:{{ req.port }}</td>
-                                <td>{{ req.bytes_out/1000 }}KB</td>
                                 <td>{{ req.responsetime }}ms</td>
+                                <td>{{ req.ip }}:{{ req.port }}</td>
+                                <td>{{ req.client_ip }}:{{ req.client_port }}</td>
+                                <td>{{ req.bytes_out/1000 }}KB</td>
                             </tr>
                             </tbody>
                         </table>

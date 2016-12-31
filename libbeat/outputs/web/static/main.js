@@ -43,8 +43,7 @@ app.factory('netdata', function($websocket) {
         }
 
         var d = new Date(e['@timestamp']);
-        // e.timestamp = (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes()+":"+d.getSeconds();
-        e.timestamp = d.getHours() + ":" + d.getMinutes()+":"+d.getSeconds();
+        e.timestamp = ('0'+d.getHours()).slice(-2) + ":" + ('0'+d.getMinutes()).slice(-2)+":"+('0'+d.getSeconds()).slice(-2);
         e.request = $.trim(e.request);
         e.response = $.trim(e.response);
         if (e.type == 'http') {

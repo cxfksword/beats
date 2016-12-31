@@ -109,6 +109,11 @@ position: relative;
     word-break: break-all;
     word-wrap: break-word;
 }
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
 .nav-tabs>li>a,.nav-tabs>li>a:focus {
     font-weight: bold;
     color: #cfd2da !important;
