@@ -8,8 +8,10 @@ import (
 	"github.com/cxfksword/beats/libbeat/common"
 	"github.com/cxfksword/beats/libbeat/logp"
 	"github.com/cxfksword/beats/libbeat/outputs"
+    "github.com/shiena/ansicolor"
 )
 
+var w = ansicolor.NewAnsiColorWriter(os.Stdout)
 func init() {
 	outputs.RegisterOutputPlugin("console", New)
 }
@@ -34,7 +36,7 @@ func newConsole(pretty bool) *console {
 func writeBuffer(buf []byte) error {
 	written := 0
 	for written < len(buf) {
-		n, err := os.Stdout.Write(buf[written:])
+		n, err := w.Write(buf[written:])
 		if err != nil {
 			return err
 		}
