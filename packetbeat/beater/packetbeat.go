@@ -40,6 +40,7 @@ type Packetbeat struct {
 
 type CmdLineArgs struct {
 	File         *string
+	Device       *string
 	Loop         *int
 	OneAtAtime   *bool
 	TopSpeed     *bool
