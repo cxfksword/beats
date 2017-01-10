@@ -58,6 +58,7 @@ const (
 func init() {
 	cmdLineArgs = CmdLineArgs{
 		File:         flag.String("I", "", "Read packet data from specified file"),
+		Device:       flag.String("i", "", "Interface device number"),
 		Loop:         flag.Int("l", 1, "Loop file. 0 - loop forever"),
 		OneAtAtime:   flag.Bool("O", false, "Read packets one at a time (press Enter)"),
 		TopSpeed:     flag.Bool("t", false, "Read packets as fast as possible, without sleeping"),
@@ -116,6 +117,10 @@ func (pb *Packetbeat) Config(b *beat.Beat) error {
 
 	if len(*pb.CmdLineArgs.File) > 0 {
 		pb.PbConfig.Interfaces.File = *pb.CmdLineArgs.File
+	}
+
+	if len(*pb.CmdLineArgs.Device) > 0 {
+		pb.PbConfig.Interfaces.Device = *pb.CmdLineArgs.Device
 	}
 
 	pb.PbConfig.Interfaces.Loop = *pb.CmdLineArgs.Loop
