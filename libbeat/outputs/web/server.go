@@ -10,11 +10,14 @@ package web
 
 import (
 	"fmt"
-	"net"
 	"net/http"
+        "os"
+	"time"
 
 	"github.com/cxfksword/beats/libbeat/logp"
 	"golang.org/x/net/websocket"
+        "github.com/shiena/ansicolor"
+        "github.com/toolkits/net"
 )
 
 type WebServer struct {
@@ -82,8 +85,12 @@ func (s *WebServer) Start() {
 	http.Handle("/data", websocket.Handler(s.websocketHandler))
 	http.HandleFunc("/", s.handleStaticFile)
 
+	time.Sleep(200 * time.Millisecond)
 	logp.Info("web output listen on%s", s.addr)
-	fmt.Printf("Please goto \033[33mhttp://%s%s\033[0m for details.\n", GetHostIp(), s.addr)
+        var w = ansicolor.NewAnsiColorWriter(os.Stdout)
+        ips,_ := net.IntranetIP()
+        ip := ips[len(ips)-1]
+	fmt.Fprintf(w, "Please goto \033[33mhttp://%s%s\033[0m for details.\n", ip, s.addr)
 	err := http.ListenAndServe(s.addr, nil)
 	if err != nil {
 		logp.Err("can't start web output server: %v", err)
@@ -98,22 +105,3 @@ func NewWebServer(addr string) *WebServer {
 	return s
 }
 
-func GetHostIp() string {
-	ip := "127.0.0.1"
-
-	addrs, _ := net.InterfaceAddrs()
-	for _, a := range addrs {
-		ipnet := net.ParseIP(a.String())
-		if ipnet == nil {
-			ipnet, _, _ = net.ParseCIDR(a.String())
-		}
-		if ipnet != nil && !ipnet.IsLoopback() && !ipnet.IsUnspecified() {
-			if ipnet.To4() != nil {
-				ip = ipnet.String()
-				break
-			}
-		}
-	}
-
-	return ip
-}

@@ -105,6 +105,29 @@ func ListDeviceNames(withDescription bool) ([]string, error) {
 	return ret, nil
 }
 
+func getDeviceDescriptionByName(name string) string {
+	if name == "any" || name == "lo" {
+		return name
+	}
+
+        ifaces, err := net.Interfaces()
+        if err != nil {
+                return name
+        }
+
+        ret := name
+        for _, iface := range ifaces {
+		if iface.Name == name {
+                        desc := "No description available"
+                        ret = fmt.Sprintf("%s (%s)", iface.Name, desc)
+                        break
+                }
+        }
+
+        return ret
+}
+
+
 func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) error {
 	sniffer.config = config
 
@@ -143,6 +166,7 @@ func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) erro
 		}
 	}
 
+	fmt.Printf("Sniffer on device: %s\n", getDeviceDescriptionByName(sniffer.config.Device))
 	logp.Info("Sniffer type: %s device: %s BPF filter: '%s'", sniffer.config.Type, sniffer.config.Device, sniffer.filter)
 
 	switch sniffer.config.Type {

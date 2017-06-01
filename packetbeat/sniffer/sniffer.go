@@ -99,6 +99,26 @@ func ListDeviceNames(withDescription bool) ([]string, error) {
 	return ret, nil
 }
 
+func getDeviceDescriptionByName(name string) string {
+	devices, err := pcap.FindAllDevs()
+        if err != nil {
+		return name
+        }
+
+        ret := name
+        for _, dev := range devices {
+                if dev.Name == name {
+                        desc := "No description available"
+                        if len(dev.Description) > 0 {
+                                desc = dev.Description
+                        }
+                        ret = fmt.Sprintf("%s (%s)", dev.Name, desc)
+			break
+                }
+        }
+        return ret
+}
+
 func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) error {
 	var err error
 
@@ -111,8 +131,12 @@ func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) erro
 	}
 
 	// set defaults
-	if len(sniffer.config.Device) == 0 {
-		sniffer.config.Device = "any"
+	if len(sniffer.config.Device) == 0 || sniffer.config.Device == "any" {
+		if runtime.GOOS == "windows" {
+			sniffer.config.Device = "0"
+		} else {
+			sniffer.config.Device = "any"
+		}
 	}
 
 	if index, err := strconv.Atoi(sniffer.config.Device); err == nil { // Device is numeric
@@ -139,6 +163,7 @@ func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) erro
 		}
 	}
 
+	fmt.Printf("Sniffer on device: %s\n", getDeviceDescriptionByName(sniffer.config.Device))
 	logp.Info("Sniffer type: %s device: %s BPF filter: '%s'", sniffer.config.Type, sniffer.config.Device, sniffer.filter)
 
 	switch sniffer.config.Type {
