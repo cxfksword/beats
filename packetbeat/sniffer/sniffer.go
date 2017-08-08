@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+        "strings"
 
 	"github.com/cxfksword/beats/libbeat/logp"
 
@@ -75,6 +76,27 @@ func deviceNameFromIndex(index int, devices []string) (string, error) {
 	return devices[index], nil
 }
 
+func deviceIndexForWindowsDefault() string {
+        index := "0"
+        devices, err := pcap.FindAllDevs()
+        if err != nil {
+               return index
+        }
+
+        for idx, dev := range devices {
+                if !strings.Contains(dev.Description, "Oracle") {
+                        index = strconv.Itoa(idx)
+			break
+                }
+
+        }
+
+        return index
+}
+
+
+
+
 // ListDevicesNames returns the list of adapters available for sniffing on
 // this computer. If the withDescription parameter is set to true, a human
 // readable version of the adapter name is added.
@@ -133,7 +155,7 @@ func (sniffer *SnifferSetup) setFromConfig(config *config.InterfacesConfig) erro
 	// set defaults
 	if len(sniffer.config.Device) == 0 || sniffer.config.Device == "any" {
 		if runtime.GOOS == "windows" {
-			sniffer.config.Device = "0"
+			sniffer.config.Device = deviceIndexForWindowsDefault()
 		} else {
 			sniffer.config.Device = "any"
 		}
